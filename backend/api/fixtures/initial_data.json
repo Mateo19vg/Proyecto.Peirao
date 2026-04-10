@@ -1,0 +1,10 @@
+[
+  {"model": "api.especie", "pk": 1, "fields": {"nombre": "Lubina", "temp_agua_min": 14.0, "temp_agua_max": 22.0, "viento_max": 25.0, "descripcion": "Pez costero activo en aguas templadas."}},
+  {"model": "api.especie", "pk": 2, "fields": {"nombre": "Dorada", "temp_agua_min": 16.0, "temp_agua_max": 26.0, "viento_max": 20.0, "descripcion": "Especie mediterránea de fondos rocosos."}},
+  {"model": "api.especie", "pk": 3, "fields": {"nombre": "Trucha común", "temp_agua_min": 8.0, "temp_agua_max": 18.0, "viento_max": 30.0, "descripcion": "Habita ríos de montaña fríos."}},
+  {"model": "api.especie", "pk": 4, "fields": {"nombre": "Carpa", "temp_agua_min": 15.0, "temp_agua_max": 28.0, "viento_max": 35.0, "descripcion": "Aguas tranquilas, embalses y lagos."}},
+  {"model": "api.spot", "pk": 1, "fields": {"nombre": "Playa de la Barceloneta", "tipo": "mar", "latitud": 41.3763, "longitud": 2.1926, "descripcion": "Spot urbano en Barcelona."}},
+  {"model": "api.spot", "pk": 2, "fields": {"nombre": "Cabo de Palos", "tipo": "mar", "latitud": 37.6316, "longitud": -0.6974, "descripcion": "Mediterráneo español, dorada y lubina."}},
+  {"model": "api.spot", "pk": 3, "fields": {"nombre": "Río Esla - León", "tipo": "rio", "latitud": 42.5200, "longitud": -5.5500, "descripcion": "Río leonés con truchas."}},
+  {"model": "api.spot", "pk": 4, "fields": {"nombre": "Embalse de Cijara", "tipo": "embalse", "latitud": 39.3167, "longitud": -4.9833, "descripcion": "Ideal para carpa y black bass."}}
+]
