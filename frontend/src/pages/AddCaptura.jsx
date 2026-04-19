@@ -1,150 +1,89 @@
-import React from "react"
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 import { createCaptura, getEspecies, getSpots } from '../services/api'
-
-const initialForm = {
-  especie: '', spot: '', fecha: '', hora: '',
-  peso_kg: '', longitud_cm: '', notas: '', foto: null,
-}
+import MapPicker from '../components/MapPicker'
 
 export default function AddCaptura() {
-  const [form, setForm] = useState(initialForm)
+  const [form, setForm] = useState({ especie: '', spot: '', fecha: '', hora: '', peso_kg: '', longitud_cm: '', notas: '', foto: null })
   const [especies, setEspecies] = useState([])
   const [spots, setSpots] = useState([])
+  const [coords, setCoords] = useState({ lat: null, lng: null })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    getEspecies().then(setEspecies)
-    getSpots().then(setSpots)
+    getEspecies().then(res => setEspecies(res.results || res)).catch(() => setError("Erro ao cargar especies."))
+    getSpots().then(res => setSpots(res.results || res)).catch(() => setError("Erro ao cargar spots."))
   }, [])
 
-  const [fotoPreview, setFotoPreview] = useState(null)
-
   const handleChange = e => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  const handleFoto = e => {
-    const file = e.target.files[0]
-    if (!file) return
-    setForm(prev => ({ ...prev, foto: file }))
-    setFotoPreview(URL.createObjectURL(file))  // preview local antes de subir
+    const { name, value } = e.target
+    setForm(p => ({ ...p, [name]: value }))
+    if (name === 'spot') {
+      const s = spots.find(x => x.id === parseInt(value))
+      if (s) setCoords({ lat: s.latitud, lng: s.longitud })
+    }
   }
 
   const handleSubmit = async () => {
     if (!form.especie || !form.spot || !form.fecha || !form.hora) {
-      setError('Especie, spot, fecha y hora son obligatorios.')
+      setError('Cubre os campos obrigatorios (*)')
       return
     }
     setLoading(true)
-    setError(null)
     try {
       await createCaptura(form)
-      navigate('/log')  // redirige al log tras guardar
-    } catch {
-      setError('Error al guardar. Revisa los datos e inténtalo de nuevo.')
+      navigate('/log')
+    } catch (err) {
+      setError('Erro ao gardar a captura.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-ocean-900 mb-6">➕ Registrar Captura</h1>
-
-      <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
-
-        {/* Especie y Spot */}
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-3xl font-bold text-blue-900 mb-6">➕ Nova Captura</h1>
+      <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6 border border-blue-50">
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Especie *">
-            <select name="especie" value={form.especie} onChange={handleChange} className="input">
+          <Field label="Peixe *">
+            <select name="especie" value={form.especie} onChange={handleChange} className="border-2 p-3 rounded-xl outline-none focus:border-blue-500">
               <option value="">Selecciona...</option>
               {especies.map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
             </select>
           </Field>
-          <Field label="Spot *">
-            <select name="spot" value={form.spot} onChange={handleChange} className="input">
+          <Field label="Zona *">
+            <select name="spot" value={form.spot} onChange={handleChange} className="border-2 p-3 rounded-xl outline-none focus:border-blue-500">
               <option value="">Selecciona...</option>
               {spots.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
             </select>
           </Field>
         </div>
 
-        {/* Fecha y Hora */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Fecha *">
-            <input type="date" name="fecha" value={form.fecha} onChange={handleChange} className="input" />
-          </Field>
-          <Field label="Hora *">
-            <input type="time" name="hora" value={form.hora} onChange={handleChange} className="input" />
-          </Field>
-        </div>
-
-        {/* Peso y Longitud */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Peso (kg)">
-            <input type="number" step="0.1" name="peso_kg" value={form.peso_kg} onChange={handleChange} className="input" placeholder="0.0" />
-          </Field>
-          <Field label="Longitud (cm)">
-            <input type="number" step="0.5" name="longitud_cm" value={form.longitud_cm} onChange={handleChange} className="input" placeholder="0" />
-          </Field>
-        </div>
-
-        {/* Notas */}
-        <Field label="Notas">
-          <textarea
-            name="notas"
-            value={form.notas}
-            onChange={handleChange}
-            rows={3}
-            className="input resize-none"
-            placeholder="Condiciones, cebo usado, observaciones..."
-          />
+        <Field label="Ubicación na costa">
+          <MapPicker lat={coords.lat} lng={coords.lng} onChange={(lat, lng) => setCoords({ lat, lng })} />
         </Field>
 
-        {/* Foto */}
-        <Field label="Foto (opcional)">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFoto}
-            className="w-full text-sm text-gray-500 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 cursor-pointer"
-          />
-          {fotoPreview && (
-            <img
-              src={fotoPreview}
-              alt="Preview"
-              className="mt-3 rounded-xl max-h-48 object-cover w-full"
-            />
-          )}
-        </Field>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Data *"><input type="date" name="fecha" onChange={handleChange} className="border-2 p-3 rounded-xl"/></Field>
+          <Field label="Hora *"><input type="time" name="hora" onChange={handleChange} className="border-2 p-3 rounded-xl"/></Field>
+        </div>
 
-        {error && (
-          <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg p-3">
-            {error}
-          </div>
-        )}
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-ocean-700 text-white py-2 rounded-lg font-medium hover:bg-ocean-900 disabled:opacity-40 transition-colors"
-        >
-          {loading ? 'Guardando...' : '💾 Guardar captura'}
+        <button onClick={handleSubmit} disabled={loading} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-800 disabled:opacity-50 transition-all">
+          {loading ? 'Gardando...' : '💾 Gardar captura'}
         </button>
+        {error && <p className="text-red-500 text-center font-medium">{error}</p>}
       </div>
     </div>
   )
 }
 
-// Wrapper para label + campo
 function Field({ label, children }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <div className="flex flex-col">
+      <label className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">{label}</label>
       {children}
     </div>
   )

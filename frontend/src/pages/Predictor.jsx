@@ -1,6 +1,19 @@
-import React from "react"
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getSpots, getEspecies, getPrediccion } from '../services/api'
+import { MapContainer, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+
+// Fix para as iconas de Leaflet
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+let DefaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
+})
+L.Marker.prototype.options.icon = DefaultIcon
 
 export default function Predictor() {
   const [spots, setSpots] = useState([])
@@ -9,128 +22,121 @@ export default function Predictor() {
   const [especieId, setEspecieId] = useState('')
   const [resultado, setResultado] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
 
-  // Cargar datos iniciales al montar
   useEffect(() => {
-    getSpots().then(setSpots)
-    getEspecies().then(setEspecies)
+    getSpots().then(res => setSpots(res.results || res))
+    getEspecies().then(res => setEspecies(res.results || res))
   }, [])
 
   const handlePrediccion = async () => {
     if (!spotId || !especieId) return
     setLoading(true)
-    setError(null)
     try {
       const data = await getPrediccion(spotId, especieId)
       setResultado(data)
-    } catch {
-      setError('Error al conectar con el servidor. ¿Está corriendo el backend?')
     } finally {
       setLoading(false)
     }
   }
 
-  // Color de la barra según puntuación
-  const barColor = resultado
-    ? resultado.puntuacion >= 75 ? 'bg-green-500'
-    : resultado.puntuacion >= 45 ? 'bg-yellow-400'
-    : 'bg-red-500'
-    : 'bg-gray-200'
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-ocean-900 mb-6">🌊 Predictor de Pesca</h1>
+    <div className="max-w-6xl mx-auto p-4">
+      <h1 className="text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
+        ⚓ O Peirao Pro <span className="text-sm bg-blue-100 px-2 py-1 rounded text-blue-600">MODO NÁUTICO</span>
+      </h1>
 
-      {/* Selector de spot y especie */}
-      <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Spot</label>
-            <select
-              className="w-full border rounded-lg p-2 text-sm"
-              value={spotId}
-              onChange={e => setSpotId(e.target.value)}
-            >
-              <option value="">Selecciona un spot...</option>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* MAPA TECNICO (Ocupa 2 columnas) */}
+        <div className="lg:col-span-2 bg-white p-2 rounded-3xl shadow-2xl border border-blue-100">
+          <div className="h-[550px] rounded-2xl overflow-hidden relative">
+            <MapContainer center={[42.43, -8.86]} zoom={10} style={{height: '100%', width: '100%'}}>
+              
+              <LayersControl position="topright">
+                {/* CAPA SATÉLITE - Para ver as pedras e o fondo real */}
+                <LayersControl.BaseLayer checked name="Visión Satélite">
+                  <TileLayer
+                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    attribution='&copy; Esri'
+                  />
+                </LayersControl.BaseLayer>
+
+                <LayersControl.BaseLayer name="Mapa de Estradas">
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                </LayersControl.BaseLayer>
+
+                {/* CAPA DE PROFUNDIDADE (Batimetría) - O estilo Garmin */}
+                <LayersControl.Overlay checked name="Relieve Submarino (Batimetría)">
+                  <TileLayer
+                    url="https://tiles.emodnet-bathymetry.eu/osm_tiles_marine/{z}/{x}/{y}.png"
+                    opacity={0.7}
+                    attribution='&copy; EMODnet'
+                  />
+                </LayersControl.Overlay>
+
+                {/* CAPA NÁUTICA - Faros e Boias */}
+                <LayersControl.Overlay name="Cartografía Náutica (Sinais)">
+                  <TileLayer url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png" />
+                </LayersControl.Overlay>
+              </LayersControl>
+
               {spots.map(s => (
-                <option key={s.id} value={s.id}>{s.nombre} ({s.tipo})</option>
+                <Marker 
+                  key={s.id} 
+                  position={[s.latitud, s.longitud]}
+                  eventHandlers={{ click: () => setSpotId(s.id) }}
+                >
+                  <Popup>
+                    <div className="text-center">
+                      <p className="font-bold text-blue-900">{s.nombre}</p>
+                      <p className="text-xs text-gray-500">Preme para seleccionar</p>
+                    </div>
+                  </Popup>
+                </Marker>
               ))}
-            </select>
+            </MapContainer>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Especie</label>
-            <select
-              className="w-full border rounded-lg p-2 text-sm"
+        </div>
+
+        {/* PANEL DE CONTROL */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-3xl shadow-lg border border-blue-50">
+            <h2 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Configuración</h2>
+            
+            <label className="block text-sm font-bold text-blue-900 mb-2">Zona Seleccionada:</label>
+            <div className="p-3 bg-blue-50 text-blue-800 rounded-xl font-bold border border-blue-100 mb-4 min-h-[48px]">
+              {spotId ? spots.find(s => s.id === spotId)?.nombre : "Preme no mapa 📍"}
+            </div>
+
+            <label className="block text-sm font-bold text-blue-900 mb-2">Especie:</label>
+            <select 
+              className="w-full border-2 border-gray-100 rounded-xl p-3 mb-6 outline-none focus:border-blue-500"
               value={especieId}
               onChange={e => setEspecieId(e.target.value)}
             >
-              <option value="">Selecciona una especie...</option>
-              {especies.map(e => (
-                <option key={e.id} value={e.id}>{e.nombre}</option>
-              ))}
+              <option value="">¿Que imos buscar?</option>
+              {especies.map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
             </select>
-          </div>
-        </div>
-        <button
-          onClick={handlePrediccion}
-          disabled={!spotId || !especieId || loading}
-          className="w-full bg-ocean-700 text-white py-2 rounded-lg font-medium hover:bg-ocean-900 disabled:opacity-40 transition-colors"
-        >
-          {loading ? 'Consultando...' : '🎣 Ver predicción'}
-        </button>
-      </div>
 
-      {/* Error */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 mb-6 text-sm">
-          {error}
-        </div>
-      )}
-
-      {/* Resultado */}
-      {resultado && (
-        <div className="bg-white rounded-2xl shadow-md p-6">
-          <h2 className="font-semibold text-ocean-900 mb-4 text-lg">
-            {resultado.spot.nombre} · {resultado.especie.nombre}
-          </h2>
-
-          {/* Barra de puntuación */}
-          <div className="mb-4">
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-500">Puntuación</span>
-              <span className="font-bold">{resultado.puntuacion}/100</span>
-            </div>
-            <div className="w-full bg-gray-100 rounded-full h-3">
-              <div
-                className={`${barColor} h-3 rounded-full transition-all`}
-                style={{ width: `${resultado.puntuacion}%` }}
-              />
-            </div>
+            <button 
+              onClick={handlePrediccion}
+              disabled={!spotId || !especieId || loading}
+              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-xl hover:bg-blue-800 disabled:opacity-40 transition-all active:scale-95"
+            >
+              {loading ? 'CALCULANDO...' : '🎣 VER PREDICIÓN'}
+            </button>
           </div>
 
-          <p className="text-gray-700 text-sm mb-4">{resultado.resumen}</p>
-
-          {/* Detalles del tiempo */}
-          {resultado.condiciones && (
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <Dato label="🌡️ Agua" value={`${resultado.condiciones.temperatura_agua?.toFixed(1)}°C`} />
-              <Dato label="💨 Viento" value={`${resultado.condiciones.velocidad_viento?.toFixed(1)} km/h`} />
-              <Dato label="🌊 Olas" value={`${resultado.condiciones.altura_olas?.toFixed(1)} m`} />
-              <Dato label="☁️ Tiempo" value={resultado.descripcion_tiempo} />
+          {resultado && (
+            <div className="bg-gradient-to-br from-blue-600 to-blue-900 p-6 rounded-3xl shadow-2xl text-white animate-in fade-in zoom-in duration-300">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-4xl font-black">{resultado.puntuacion}%</span>
+                <span className="text-xs uppercase font-bold tracking-tighter opacity-70">Probabilidade</span>
+              </div>
+              <p className="text-lg leading-tight font-medium">"{resultado.resumen}"</p>
             </div>
           )}
         </div>
-      )}
-    </div>
-  )
-}
-
-function Dato({ label, value }) {
-  return (
-    <div className="bg-ocean-50 rounded-lg p-3">
-      <div className="text-gray-500">{label}</div>
-      <div className="font-semibold text-ocean-900">{value ?? '—'}</div>
+      </div>
     </div>
   )
 }

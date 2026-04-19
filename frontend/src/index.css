@@ -7,3 +7,10 @@
     @apply w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ocean-500 focus:border-transparent transition;
   }
 }
+
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #f4f1ea !important; /* Color crema oficial de papel náutico */
+}
