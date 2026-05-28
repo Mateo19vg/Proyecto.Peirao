@@ -1,254 +1,328 @@
 import React, { useState, useEffect } from 'react'
 import { getSpots, getEspecies, getPrediccion } from '../services/api'
-import { MapContainer, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-
-import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerIcon   from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
-let DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41]
-})
-L.Marker.prototype.options.icon = DefaultIcon
 
-// Etiquetas legibles para cada factor del desglose
+L.Marker.prototype.options.icon = L.icon({
+  iconUrl: markerIcon, shadowUrl: markerShadow,
+  iconSize: [25, 41], iconAnchor: [12, 41],
+})
+
+const IconoRojo = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: markerShadow,
+  iconSize: [25, 41], iconAnchor: [12, 41],
+})
+
 const FACTOR_LABELS = {
-  temperatura_agua: { label: 'Temperatura agua', emoji: '🌡️' },
-  viento:           { label: 'Viento',            emoji: '💨' },
-  estado_mar:       { label: 'Estado del mar',    emoji: '🌊' },
-  claridad_agua:    { label: 'Claridad',          emoji: '💧' },
-  luna:             { label: 'Fase lunar',        emoji: '🌙' },
-  mareas:           { label: 'Mareas',            emoji: '🔄' },
+  temperatura_agua: { label: 'Temperatura agua', max: 20 },
+  viento:           { label: 'Viento',            max: 15 },
+  estado_mar:       { label: 'Estado del mar',    max: 15 },
+  claridad_agua:    { label: 'Claridad del agua', max: 10 },
+  luna:             { label: 'Fase lunar',        max: 20 },
+  mareas:           { label: 'Mareas',            max: 20 },
 }
 
-function BaraFactor({ nombre, puntos, max, nota }) {
-  const pct = Math.round((puntos / max) * 100)
-  const color =
-    pct >= 75 ? 'bg-emerald-500' :
-    pct >= 50 ? 'bg-sky-500' :
-    pct >= 30 ? 'bg-amber-400' :
-                'bg-red-400'
+function obtenerColorHex(puntuacion) {
+  if (puntuacion >= 80) return '#22c55e' // Excelente (Verde)
+  if (puntuacion >= 65) return '#06b6d4' // Bueno (Cian)
+  if (puntuacion >= 50) return '#f59e0b' // Regular (Naranja)
+  if (puntuacion >= 35) return '#f97316' // Malo (Naranja Oscuro)
+  return '#ef4444' // Muy malo (Rojo)
+}
 
-  const { label, emoji } = FACTOR_LABELS[nombre] || { label: nombre, emoji: '•' }
+function ClickHandler({ onMapClick }) {
+  useMapEvents({ click(e) { onMapClick(e.latlng.lat, e.latlng.lng) } })
+  return null
+}
+
+// Ahora cada barra vuelve a calcular su propio color de manera independiente
+function BarraFactor({ nombre, puntos, max, nota }) {
+  const pct = Math.round((puntos / max) * 100)
+
+  const color =
+    pct >= 80 ? '#22c55e' : // Verde
+    pct >= 65 ? '#06b6d4' : // Cian
+    pct >= 50 ? '#f59e0b' : // Naranja
+    pct >= 35 ? '#f97316' : '#ef4444' // Rojo
+
+  const label = FACTOR_LABELS[nombre]?.label || nombre
 
   return (
     <div className="mb-3">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-xs font-semibold text-gray-600">
-          {emoji} {label}
-        </span>
-        <span className="text-xs font-bold text-gray-500">
-          {puntos}/{max}
-        </span>
+        <span className="text-xs font-medium text-gray-600">{label}</span>
+        <span className="text-xs font-semibold text-gray-400">{puntos}/{max}</span>
       </div>
-      <div className="w-full bg-gray-100 rounded-full h-2">
-        <div
-          className={`${color} h-2 rounded-full transition-all duration-700`}
-          style={{ width: `${pct}%` }}
-        />
+      <div className="w-full bg-gray-100 rounded-full h-1.5">
+        <div className="h-1.5 rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, backgroundColor: color }} />
       </div>
-      {nota && (
-        <p className="text-xs text-gray-400 mt-0.5 italic">{nota}</p>
-      )}
+      {nota && <p className="text-xs text-gray-400 mt-0.5">{nota}</p>}
     </div>
   )
 }
 
 function ScoreRing({ puntuacion }) {
-  const color =
-    puntuacion >= 80 ? '#10b981' :
-    puntuacion >= 65 ? '#0ea5e9' :
-    puntuacion >= 50 ? '#f59e0b' :
-    puntuacion >= 35 ? '#f97316' :
-                       '#ef4444'
-
-  const r = 36
-  const circunferencia = 2 * Math.PI * r
-  const tramo = (puntuacion / 100) * circunferencia
-
+  const color = obtenerColorHex(puntuacion)
+  const r = 36, circ = 2 * Math.PI * r
+  const tramo = (puntuacion / 100) * circ
   return (
     <div className="flex flex-col items-center">
-      <svg width="90" height="90" viewBox="0 0 90 90">
-        <circle cx="45" cy="45" r={r} fill="none" stroke="#e5e7eb" strokeWidth="8" />
-        <circle
-          cx="45" cy="45" r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth="8"
-          strokeDasharray={`${tramo} ${circunferencia}`}
-          strokeLinecap="round"
+      <svg width="88" height="88" viewBox="0 0 90 90">
+        <circle cx="45" cy="45" r={r} fill="none" stroke="#e5e7eb" strokeWidth="7" />
+        <circle cx="45" cy="45" r={r} fill="none" stroke={color} strokeWidth="7"
+          strokeDasharray={`${tramo} ${circ}`} strokeLinecap="round"
           transform="rotate(-90 45 45)"
-          style={{ transition: 'stroke-dasharray 0.8s ease' }}
-        />
-        <text x="45" y="49" textAnchor="middle" fontSize="18" fontWeight="bold" fill={color}>
-          {puntuacion}
-        </text>
+          style={{ transition: 'stroke-dasharray 0.8s ease' }} />
+        <text x="45" y="50" textAnchor="middle" fontSize="20" fontWeight="700" fill={color}
+          fontFamily="Arial, sans-serif">{puntuacion}</text>
       </svg>
-      <span className="text-xs text-gray-400 font-medium mt-1">/ 100</span>
+      <span className="text-xs text-gray-400 mt-0.5">/ 100</span>
     </div>
   )
 }
 
 export default function Predictor() {
-  const [spots, setSpots]       = useState([])
-  const [especies, setEspecies] = useState([])
-  const [spotId, setSpotId]     = useState('')
+  const [spots, setSpots]         = useState([])
+  const [especies, setEspecies]   = useState([])
   const [especieId, setEspecieId] = useState('')
   const [resultado, setResultado] = useState(null)
-  const [loading, setLoading]   = useState(false)
+  const [loading, setLoading]     = useState(false)
+  const [modoLibre, setModoLibre] = useState(false)
+  const [spotId, setSpotId]       = useState('')
+  const [puntoLibre, setPuntoLibre] = useState(null)
 
   useEffect(() => {
     getSpots().then(res => setSpots(res.results || res))
     getEspecies().then(res => setEspecies(res.results || res))
   }, [])
 
+  const handleMapClick = (lat, lon) => {
+    setPuntoLibre({ lat, lon })
+    setSpotId('')
+    setModoLibre(true)
+    setResultado(null)
+  }
+
+  const handleSpotClick = (id) => {
+    setSpotId(id)
+    setPuntoLibre(null)
+    setModoLibre(false)
+    setResultado(null)
+  }
+
   const handlePrediccion = async () => {
-    if (!spotId || !especieId) return
+    if (!especieId || (!spotId && !puntoLibre)) return
     setLoading(true)
     try {
-      const data = await getPrediccion(spotId, especieId)
+      const data = modoLibre && puntoLibre
+        ? await getPrediccion(null, especieId, puntoLibre.lat, puntoLibre.lon)
+        : await getPrediccion(spotId, especieId)
       setResultado(data)
+    } catch (error) {
+      console.error("Error al obtener la predicción:", error)
     } finally {
       setLoading(false)
     }
   }
 
-  const spotSeleccionado = spots.find(s => s.id === spotId)
+  const spotSeleccionado  = spots.find(s => s.id === spotId)
+  const ubicacionActiva   = modoLibre && puntoLibre
+    ? `${puntoLibre.lat.toFixed(4)}, ${puntoLibre.lon.toFixed(4)}`
+    : spotSeleccionado?.nombre || null
+
+  const puedeConsultar = especieId && (spotId || puntoLibre)
+
+  const resumenLimpio = resultado?.resumen
+    ?.replace(/[🎣✅⚠️❌]/gu, '').trim()
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-        ⚓ O Peirao Pro
-        <span className="text-sm bg-blue-100 px-2 py-1 rounded text-blue-600">MODO NÁUTICO</span>
-      </h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="max-w-6xl mx-auto">
+      <div className="flex h-[calc(100vh-120px)] gap-0 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
 
         {/* MAPA */}
-        <div className="lg:col-span-2 bg-white p-2 rounded-3xl shadow-2xl border border-blue-100">
-          <div className="h-[500px] rounded-2xl overflow-hidden">
-            <MapContainer center={[42.43, -8.86]} zoom={10} style={{ height: '100%', width: '100%' }}>
-              <LayersControl position="topright">
-                <LayersControl.BaseLayer checked name="Satélite">
-                  <TileLayer
-                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    attribution="&copy; Esri"
-                  />
-                </LayersControl.BaseLayer>
-                <LayersControl.BaseLayer name="Mapa">
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                </LayersControl.BaseLayer>
-                <LayersControl.Overlay checked name="Batimetría">
-                  <TileLayer
-                    url="https://tiles.emodnet-bathymetry.eu/osm_tiles_marine/{z}/{x}/{y}.png"
-                    opacity={0.7}
-                    attribution="&copy; EMODnet"
-                  />
-                </LayersControl.Overlay>
-                <LayersControl.Overlay name="Náutica">
-                  <TileLayer url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png" />
-                </LayersControl.Overlay>
-              </LayersControl>
+        <div className="flex-1 relative">
+          <MapContainer
+            center={[42.43, -8.86]} zoom={10}
+            style={{ height: '100%', width: '100%' }}
+          >
+            <ClickHandler onMapClick={handleMapClick} />
 
-              {spots.map(s => (
-                <Marker
-                  key={s.id}
-                  position={[s.latitud, s.longitud]}
-                  eventHandlers={{ click: () => setSpotId(s.id) }}
-                >
-                  <Popup>
-                    <div className="text-center">
-                      <p className="font-bold text-blue-900">{s.nombre}</p>
-                      <p className="text-xs text-gray-500">Pulsa para seleccionar</p>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
+            <LayersControl position="topright">
+              <LayersControl.BaseLayer checked name="Satélite">
+                <TileLayer
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                  attribution="&copy; Esri"
+                />
+              </LayersControl.BaseLayer>
+              <LayersControl.BaseLayer name="Mapa">
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              </LayersControl.BaseLayer>
+              <LayersControl.Overlay checked name="Batimetría">
+                <TileLayer
+                  url="https://tiles.emodnet-bathymetry.eu/osm_tiles_marine/{z}/{x}/{y}.png"
+                  opacity={0.6} attribution="&copy; EMODnet"
+                />
+              </LayersControl.Overlay>
+              <LayersControl.Overlay name="Náutica">
+                <TileLayer url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png" />
+              </LayersControl.Overlay>
+            </LayersControl>
+
+            {spots.map(s => (
+              <Marker
+                key={s.id}
+                position={[s.latitud, s.longitud]}
+                eventHandlers={{ click: () => handleSpotClick(s.id) }}
+              >
+                <Popup>
+                  <p className="font-semibold text-sm">{s.nombre}</p>
+                  <p className="text-xs text-gray-500">Pulsa para seleccionar</p>
+                </Popup>
+              </Marker>
+            ))}
+
+            {puntoLibre && (
+              <Marker position={[puntoLibre.lat, puntoLibre.lon]} icon={IconoRojo}>
+                <Popup>
+                  <p className="font-semibold text-sm">Punto personalizado</p>
+                  <p className="text-xs font-mono text-gray-500">
+                    {puntoLibre.lat.toFixed(5)}, {puntoLibre.lon.toFixed(5)}
+                  </p>
+                </Popup>
+              </Marker>
+            )}
+          </MapContainer>
+
+          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-xs text-gray-500 px-3 py-1.5 rounded-lg shadow pointer-events-none">
+            Selecciona un punto del mapa o haz clic en cualquier lugar
           </div>
         </div>
 
         {/* PANEL DERECHO */}
-        <div className="space-y-4">
+        <div className="w-80 bg-white border-l border-gray-200 flex flex-col overflow-y-auto">
+
+          {/* Cabecera del panel */}
+          <div className="px-6 py-5 border-b border-gray-100">
+            <h1 className="text-base font-bold text-blue-900 tracking-tight">Predictor</h1>
+            <p className="text-xs text-gray-400 mt-0.5">Condiciones en tiempo real</p>
+          </div>
 
           {/* Configuración */}
-          <div className="bg-white p-5 rounded-3xl shadow-lg border border-blue-50">
-            <h2 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Configuración</h2>
+          <div className="px-6 py-5 space-y-4 border-b border-gray-100">
 
-            <label className="block text-sm font-bold text-blue-900 mb-1">Zona:</label>
-            <div className="p-3 bg-blue-50 text-blue-800 rounded-xl font-bold border border-blue-100 mb-4 min-h-[44px] text-sm">
-              {spotSeleccionado ? spotSeleccionado.nombre : 'Pulsa un punto en el mapa 📍'}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Ubicación</p>
+              <div className={`text-sm px-3 py-2.5 rounded-lg border font-medium min-h-[40px] ${
+                modoLibre
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : ubicacionActiva
+                    ? 'bg-blue-50 text-blue-900 border-blue-100'
+                    : 'bg-gray-50 text-gray-400 border-gray-200'
+              }`}>
+                {ubicacionActiva || 'Sin seleccionar'}
+              </div>
             </div>
 
-            <label className="block text-sm font-bold text-blue-900 mb-1">Especie:</label>
-            <select
-              className="w-full border-2 border-gray-100 rounded-xl p-3 mb-5 outline-none focus:border-blue-500 text-sm"
-              value={especieId}
-              onChange={e => setEspecieId(e.target.value)}
-            >
-              <option value="">¿Qué buscamos?</option>
-              {especies.map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
-            </select>
+            <div>
+              <p className="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Especie</p>
+              <select
+                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 bg-white"
+                value={especieId}
+                onChange={e => setEspecieId(e.target.value)}
+              >
+                <option value="">Selecciona una especie</option>
+                {especies.map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
+              </select>
+            </div>
 
             <button
               onClick={handlePrediccion}
-              disabled={!spotId || !especieId || loading}
-              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-xl hover:bg-blue-800 disabled:opacity-40 transition-all active:scale-95"
+              disabled={!puedeConsultar || loading}
+              className="w-full bg-blue-700 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 disabled:opacity-40 transition-all"
             >
-              {loading ? 'CALCULANDO...' : '🎣 VER PREDICCIÓN'}
+              {loading ? 'Calculando...' : 'Ver predicción'}
             </button>
           </div>
 
           {/* Resultado */}
           {resultado && (
-            <div className="bg-white rounded-3xl shadow-lg border border-blue-50 overflow-hidden">
+            <div className="px-6 py-5 space-y-5">
 
-              {/* Cabecera con score */}
-              <div className="bg-gradient-to-br from-blue-700 to-blue-900 p-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-medium leading-snug opacity-90">
-                      {resultado.resumen}
+              {/* Score + resumen */}
+              <div className="flex items-center gap-4">
+                <ScoreRing puntuacion={resultado.puntuacion} />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-800 leading-snug">
+                    {resumenLimpio}
+                  </p>
+                  {resultado.luna && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {resultado.luna.nombre}
                     </p>
-                    {resultado.mareas && (
-                      <p className="text-blue-200 text-xs mt-1">
-                        🔄 {resultado.mareas.momento}
-                      </p>
-                    )}
-                    {resultado.luna && (
-                      <p className="text-blue-200 text-xs mt-0.5">
-                        {resultado.luna.emoji} {resultado.luna.nombre}
-                      </p>
-                    )}
-                  </div>
-                  <ScoreRing puntuacion={resultado.puntuacion} />
+                  )}
+                  {resultado.mareas && (
+                    <p className="text-xs text-gray-400">
+                      {resultado.mareas.estado}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Desglose por factor */}
-              {resultado.desglose && (
-                <div className="p-5">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                    Desglose de factores
-                  </h3>
-                  {Object.entries(resultado.desglose).map(([nombre, datos]) => (
-                    <BaraFactor
-                      key={nombre}
-                      nombre={nombre}
-                      puntos={datos.puntos}
-                      max={datos.max}
-                      nota={datos.nota}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="border-t border-gray-100" />
+
+              {/* Desglose */}
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                  Desglose
+                </p>
+                {resultado.desglose && (
+                  <div className="bg-gray-50 p-4 rounded-xl space-y-1">
+                    {Object.entries(resultado.desglose).map(([nombre, datos]) => (
+                      <BarraFactor
+                        key={nombre}
+                        nombre={nombre}
+                        puntos={datos.puntos}
+                        max={datos.max}
+                        nota={datos.nota}
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                {/* Condiciones raw */}
+                {resultado.condiciones && (
+                  <>
+                    <div className="border-t border-gray-100 my-4" />
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                        Condiciones actuales
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          ['Agua', `${resultado.condiciones.temperatura_agua?.toFixed(1) ?? '—'} °C`],
+                          ['Viento', `${resultado.condiciones.velocidad_viento?.toFixed(0) ?? '—'} km/h`],
+                          ['Olas', `${resultado.condiciones.altura_olas?.toFixed(1) ?? '—'} m`],
+                          ['Aire', `${resultado.condiciones.temperatura_aire?.toFixed(1) ?? '—'} °C`],
+                        ].map(([lbl, val]) => (
+                          <div key={lbl} className="bg-gray-50 rounded-lg px-3 py-2">
+                            <p className="text-xs text-gray-400">{lbl}</p>
+                            <p className="text-sm font-semibold text-gray-700 tabular-nums">{val}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div> 
             </div>
           )}
         </div>
       </div>
     </div>
   )
-}
+} 

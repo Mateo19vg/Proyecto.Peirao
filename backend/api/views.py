@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -44,31 +44,62 @@ class CapturaViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def prediccion(request):
-    spot_id    = request.query_params.get('spot_id')
+    """
+    Endpoint de prediccion. Acepta dos modos:
+      - Spot guardado:  ?spot_id=X&especie_id=Y
+      - Punto libre:    ?lat=42.3&lon=-8.7&especie_id=Y
+    """
     especie_id = request.query_params.get('especie_id')
+    spot_id    = request.query_params.get('spot_id')
+    lat_param  = request.query_params.get('lat')
+    lon_param  = request.query_params.get('lon')
 
-    if not spot_id or not especie_id:
-        return Response({"error": "Faltan parámetros spot_id y especie_id"}, status=400)
+    if not especie_id:
+        return Response({"error": "Falta el parametro especie_id"}, status=400)
 
     try:
-        spot    = Spot.objects.get(pk=spot_id)
         especie = Especie.objects.get(pk=especie_id)
-    except (Spot.DoesNotExist, Especie.DoesNotExist):
-        return Response({"error": "Spot o especie no encontrados"}, status=404)
+    except Especie.DoesNotExist:
+        return Response({"error": "Especie no encontrada"}, status=404)
 
-    condiciones = get_weather(spot.latitud, spot.longitud)
+    # Modo 1: spot guardado
+    if spot_id:
+        try:
+            spot = Spot.objects.get(pk=spot_id)
+        except Spot.DoesNotExist:
+            return Response({"error": "Spot no encontrado"}, status=404)
+        lat, lon = spot.latitud, spot.longitud
+        spot_data = SpotSerializer(spot).data
+        nombre_ubicacion = spot.nombre
 
-    # Pasamos las coordenadas del spot para el cálculo de mareas
-    resultado = calcular_puntuacion(
-        condiciones, especie,
-        lat=spot.latitud,
-        lon=spot.longitud,
-    )
+    # Modo 2: coordenadas libres
+    elif lat_param and lon_param:
+        try:
+            lat = float(lat_param)
+            lon = float(lon_param)
+        except ValueError:
+            return Response({"error": "lat y lon deben ser numeros"}, status=400)
+        if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
+            return Response({"error": "Coordenadas fuera de rango"}, status=400)
+        spot_data = None
+        nombre_ubicacion = f"Punto personalizado ({lat:.4f}, {lon:.4f})"
+
+    else:
+        return Response(
+            {"error": "Indica spot_id o las coordenadas lat y lon"},
+            status=400
+        )
+
+    condiciones = get_weather(lat, lon)
+    resultado   = calcular_puntuacion(condiciones, especie, lat=lat, lon=lon)
 
     return Response({
-        "spot":              SpotSerializer(spot).data,
-        "especie":           EspecieSerializer(especie).data,
-        "condiciones":       condiciones,
+        "spot":               spot_data,
+        "nombre_ubicacion":   nombre_ubicacion,
+        "lat":                lat,
+        "lon":                lon,
+        "especie":            EspecieSerializer(especie).data,
+        "condiciones":        condiciones,
         "descripcion_tiempo": describir_tiempo(
             condiciones.get("codigo_tiempo", 0) if condiciones else 0
         ),
