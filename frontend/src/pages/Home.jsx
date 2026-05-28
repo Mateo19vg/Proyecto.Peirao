@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="text-center py-12">
       <h1 className="text-4xl font-bold text-ocean-900 mb-4">
-        🎣 FishingPredictor
+        O Peirao
       </h1>
       <p className="text-lg text-gray-600 mb-10">
         Predice las mejores condiciones para pescar en tus spots favoritos.
@@ -14,19 +14,16 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
         <FeatureCard
           to="/predictor"
-          emoji="🌊"
           title="Predictor"
           desc="Consulta el tiempo y la puntuación de pesca en tiempo real"
         />
         <FeatureCard
           to="/log"
-          emoji="📋"
           title="Mis Capturas"
           desc="Revisa el historial de todas tus capturas registradas"
         />
         <FeatureCard
           to="/add"
-          emoji="➕"
           title="Registrar"
           desc="Anota una nueva captura con fotos y condiciones del momento"
         />

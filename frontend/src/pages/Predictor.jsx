@@ -137,9 +137,6 @@ export default function Predictor() {
 
   const puedeConsultar = especieId && (spotId || puntoLibre)
 
-  const resumenLimpio = resultado?.resumen
-    ?.replace(/[🎣✅⚠️❌]/gu, '').trim()
-
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex h-[calc(100vh-120px)] gap-0 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
@@ -258,7 +255,8 @@ export default function Predictor() {
                 <ScoreRing puntuacion={resultado.puntuacion} />
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-gray-800 leading-snug">
-                    {resumenLimpio}
+
+                    {resultado.resumen}
                   </p>
                   {resultado.luna && (
                     <p className="text-xs text-gray-400 mt-1">

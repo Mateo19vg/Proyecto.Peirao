@@ -10,24 +10,9 @@ especies = [
     {"pk": 6, "nombre": "Calamar",  "t_min": 12, "t_max": 20, "v_max": 25},
 ]
 
-# Zonas principales de la costa gallega
-zonas = [
-    ("A Guarda",   41.90, -8.87), ("Baiona",     42.12, -8.84),
-    ("Vigo",       42.23, -8.72), ("Cangas",     42.26, -8.78),
-    ("Bueu",       42.32, -8.78), ("Marin",      42.39, -8.70),
-    ("Pontevedra", 42.43, -8.64), ("Sanxenxo",   42.40, -8.81),
-    ("O Grove",    42.48, -8.86), ("Ribeira",    42.55, -8.99),
-    ("Muros",      42.77, -9.05), ("Fisterra",   42.90, -9.26),
-    ("Camarinas",  43.13, -9.18), ("Laxe",       43.21, -9.00),
-    ("Malpica",    43.32, -8.81), ("A Coruna",   43.36, -8.41),
-    ("Ferrol",     43.48, -8.23), ("Cedeira",    43.66, -8.05),
-    ("Viveiro",    43.66, -7.59), ("Burela",     43.65, -7.35),
-    ("Ribadeo",    43.53, -7.03),
-]
-
 data = []
 
-# Especies
+# Procesar únicamente las especies
 for e in especies:
     data.append({
         "model": "api.especie",
@@ -41,24 +26,8 @@ for e in especies:
         }
     })
 
-# Spots (10 por zona)
-pk_spot = 1
-for z_nome, z_lat, z_lng in zonas:
-    for i in range(10):
-        data.append({
-            "model": "api.spot",
-            "pk": pk_spot,
-            "fields": {
-                "nombre":      f"{z_nome} - Punto {i+1}",
-                "tipo":        "mar",
-                "latitud":     round(z_lat + (i * 0.005), 4),
-                "longitud":    round(z_lng + (i * 0.005), 4),
-                "descripcion": f"Zona de pesca en {z_nome}",
-            }
-        })
-        pk_spot += 1
-
+# Guardar en el archivo JSON listo para Django
 with open('api/fixtures/initial_data.json', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print(f"Generados {len(especies)} especies y {pk_spot-1} spots en Galicia.")
+print(f"Hecho: Generadas {len(especies)} especies en api/fixtures/initial_data.json.")

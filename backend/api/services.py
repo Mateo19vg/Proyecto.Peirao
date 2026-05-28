@@ -95,23 +95,23 @@ def calcular_fase_lunar(dt: datetime = None) -> dict:
     dias_desde_ref = (dt - LUNA_NUEVA_REF).total_seconds() / 86400
     fase_norm = (dias_desde_ref % CICLO) / CICLO  # 0.0 a 1.0
 
-    # Nombre e icono de la fase
+    # Nombre de la fase
     if fase_norm < 0.063 or fase_norm >= 0.937:
-        nombre, emoji = "Luna nueva", "🌑"
+        nombre = "Luna nueva"
     elif fase_norm < 0.188:
-        nombre, emoji = "Cuarto creciente", "🌒"
+        nombre = "Luna creciente"
     elif fase_norm < 0.312:
-        nombre, emoji = "Cuarto creciente", "🌓"
+        nombre = "Cuarto creciente"
     elif fase_norm < 0.437:
-        nombre, emoji = "Gibosa creciente", "🌔"
+        nombre = "Luna creciente"
     elif fase_norm < 0.563:
-        nombre, emoji = "Luna llena", "🌕"
+        nombre = "Luna llena"
     elif fase_norm < 0.688:
-        nombre, emoji = "Gibosa menguante", "🌖"
+        nombre = "Luna menguante"
     elif fase_norm < 0.812:
-        nombre, emoji = "Cuarto menguante", "🌗"
+        nombre = "Cuarto menguante"
     else:
-        nombre, emoji = "Cuarto menguante", "🌘"
+        nombre = "Luna menguante"
 
     # Puntuación: coseno doble → máximo en luna nueva (0) y llena (0.5)
     # cos(2π * 2 * fase) da 1.0 en 0 y 0.5, y -1.0 en 0.25 y 0.75
@@ -120,7 +120,6 @@ def calcular_fase_lunar(dt: datetime = None) -> dict:
     return {
         "fase_norm":   round(fase_norm, 3),
         "nombre":      nombre,
-        "emoji":       emoji,
         "puntuacion":  puntuacion,
     }
 
@@ -411,24 +410,19 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
 
     # -- Resumen principal --
     if total >= 80:
-        icono = "🎣✅"
         texto = "Condiciones excelentes para pescar"
     elif total >= 65:
-        icono = "✅"
         texto = "Buenas condiciones"
     elif total >= 50:
-        icono = "⚠️"
         texto = "Condiciones aceptables"
     elif total >= 35:
-        icono = "⚠️"
         texto = "Condiciones mediocres"
     else:
-        icono = "❌"
         texto = "Condiciones desfavorables"
 
     # Añadir el problema más grave si lo hay
     problemas = [n for n in [temp_nota, viento_nota, olas_nota, claridad_nota] if n]
-    resumen = f"{icono} {texto}"
+    resumen = texto
     if problemas:
         resumen += ": " + problemas[0]
 
@@ -452,7 +446,7 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
         },
         "luna": {
             "puntos": luna_pts, "max": 20,
-            "nota": f"{luna['emoji']} {luna['nombre']}",
+            "nota": luna['nombre'],
         },
         "mareas": {
             "puntos": mareas_pts, "max": 20,
