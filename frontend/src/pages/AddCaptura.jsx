@@ -106,17 +106,7 @@ export default function AddCaptura() {
 
   useEffect(() => {
     getEspecies().then(res => {
-      let lista = res.results || res || []
-      
-      // SALVAGUARDA CE FALÓPODOS: Si por paginación no vienen, los añadimos manualmente al frente
-      const nombresExistentes = lista.map(e => e.nombre.toLowerCase())
-      if (!nombresExistentes.includes('choco')) {
-        lista = [{ id: 'choco', nombre: 'Choco' }, ...lista]
-      }
-      if (!nombresExistentes.includes('calamar')) {
-        lista = [{ id: 'calamar', nombre: 'Calamar' }, ...lista]
-      }
-      
+      let lista = res.results || res || []    
       setEspecies(lista)
     })
     
