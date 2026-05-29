@@ -1,2 +1,2 @@
-backend/.venv/
+.venv/
 backend/db.sqlite3
