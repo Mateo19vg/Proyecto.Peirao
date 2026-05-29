@@ -1,45 +1,34 @@
-# Proyecto.Peirao
-⚙️ Instalación y arranque
-El proyecto tiene dos partes independientes que hay que arrancar en dos terminales distintas.
-Terminal 1 — Backend (Django)
-bash# 1. Entrar en la carpeta del backend
-cd backend
-
-# 2. Crear el entorno virtual
-python3 -m venv .venv
-
-# 3. Activar el entorno virtual
-#    En Linux / macOS:
-source .venv/bin/activate
-#    En Windows (PowerShell):
-.venv\Scripts\Activate.ps1
-
-# 4. Instalar dependencias Python
+1. Clonar el repositorio
+2. Abre una terminal y clona el proyecto en tu equipo:
+git clone https://github.com/Mateo19vg/Proyecto.Peirao.git
+cd Proyecto.Peirao
+   Configuración del Backend (Django)
+Puedes configurar el backend ejecutando los siguientes comandos:
+Crear e iniciar el entorno virtual:
+En Linux/macOS:
+python3 -m venv venv
+source venv/bin/activate
+En Windows (PowerShell):
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+Instalar las dependencias de Python:
+Asegúrate de que estás en la carpeta raíz o donde se aloje el archivo requirements.txt:
 pip install -r requirements.txt
-
-# 5. Crear las tablas en la base de datos
+Ejecutar las migraciones de la Base de Datos:
+Crea la estructura de tablas de SQLite (modelos de Especie, Spot y Captura):
 python manage.py migrate
-
-# 6. (Opcional) Cargar datos de ejemplo — spots y especies de Galicia
-python manage.py loaddata api/fixtures/initial_data.json
-
-# 7. (Opcional) Crear superusuario para acceder al panel de administración
-python manage.py createsuperuser
-
-# 8. Arrancar el servidor de desarrollo
+Cargar los datos iniciales (Fixtures):
+Para no empezar con la aplicación vacía, carga los datos de ejemplo preconfigurados (especies y spots de pesca):
+python manage.py loaddata initial_data.json
+Iniciar el servidor de desarrollo del backend:
 python manage.py runserver
-✅ El backend queda disponible en: http://127.0.0.1:8000
-✅ Panel de administración: http://127.0.0.1:8000/admin
+El backend estará disponible y escuchando peticiones en http://localhost:8000/.
+Puedes visitar http://localhost:8000/api/ para inspeccionar la API REST a través del explorador interactivo.
 
-Terminal 2 — Frontend (React + Vite)
-bash# 1. Entrar en la carpeta del frontend
-cd frontend
-
-# 2. Instalar dependencias Node
+  Configuración del Frontend (React + Vite)
+Abre otra ventana de la terminal (manteniendo el servidor de Django corriendo) y dirígete a la carpeta del frontend para inicializarlo:
+Instalar las dependencias de Node.js:
 npm install
-
-# 3. Arrancar el servidor de desarrollo
+Iniciar el servidor de desarrollo de Vite:
 npm run dev
-✅ La aplicación queda disponible en: http://localhost:5173
-
-El proxy de Vite redirige automáticamente todas las llamadas a /api/* al backend en el puerto 8000, por lo que no hace falta configurar nada más.
+El frontend compilará y se levantará en http://localhost:5173/.
