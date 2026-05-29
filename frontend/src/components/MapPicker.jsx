@@ -2,8 +2,6 @@ import React from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, LayersControl } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-
-// Iconas (Mantemos as túas)
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 let DefaultIcon = L.icon({ iconUrl: markerIcon, shadowUrl: markerShadow, iconSize: [25, 41], iconAnchor: [12, 41] })
@@ -23,7 +21,6 @@ export default function MapPicker({ lat, lng, onChange }) {
   const center = [42.400, -8.810]
 
   return (
-    /* IMPORTANTE: O height ten que estar aquí ou non se verá nada */
     <div style={{ height: '400px', width: '100%', position: 'relative', zIndex: 1 }}>
       <MapContainer 
         center={center} 

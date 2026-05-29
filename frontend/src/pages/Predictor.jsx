@@ -137,10 +137,10 @@ export default function Predictor() {
   const puedeConsultar = especieId && (spotId || puntoLibre)
 
   return (
-    /* 🔥 CAMBIO: Quitamos px y py; dejamos solo pt-6 (Padding Top) */
+    /* Quitamos px y py; dejamos solo pt-6 (Padding Top) */
     <div className="max-w-6xl mx-auto pt-6">
       
-      {/* 🔥 CAMBIO: Ajustamos la altura exacta restando 144px de la pantalla */}
+      {/* Ajustamos la altura exacta restando 144px de la pantalla */}
       <div className="flex h-[calc(100vh-144px)] gap-0 rounded-t-2xl overflow-hidden shadow-xl border-t border-x border-gray-200">
 
         {/* MAPA */}
