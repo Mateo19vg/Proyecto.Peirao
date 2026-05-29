@@ -173,6 +173,7 @@ export default function AddCaptura() {
             nombre: nombreSpot, tipo: 'mar',
             latitud: coords.lat, longitud: coords.lon,
             descripcion: modo === 'libre' ? 'Punto personalizado' : 'Zona general',
+            es_personalizado: true,
           }),
         })
         if (!res.ok) throw new Error('No se pudo crear el spot')

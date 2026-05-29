@@ -39,15 +39,14 @@ function ClickHandler({ onMapClick }) {
   return null
 }
 
-// Ahora cada barra vuelve a calcular su propio color de manera independiente
 function BarraFactor({ nombre, puntos, max, nota }) {
   const pct = Math.round((puntos / max) * 100)
 
   const color =
-    pct >= 80 ? '#22c55e' : // Verde
-    pct >= 65 ? '#06b6d4' : // Cian
-    pct >= 50 ? '#f59e0b' : // Naranja
-    pct >= 35 ? '#f97316' : '#ef4444' // Rojo
+    pct >= 80 ? '#22c55e' : 
+    pct >= 65 ? '#06b6d4' : 
+    pct >= 50 ? '#f59e0b' : 
+    pct >= 35 ? '#f97316' : '#ef4444'
 
   const label = FACTOR_LABELS[nombre]?.label || nombre
 
@@ -138,8 +137,11 @@ export default function Predictor() {
   const puedeConsultar = especieId && (spotId || puntoLibre)
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex h-[calc(100vh-120px)] gap-0 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
+    /* 🔥 CAMBIO: Quitamos px y py; dejamos solo pt-6 (Padding Top) */
+    <div className="max-w-6xl mx-auto pt-6">
+      
+      {/* 🔥 CAMBIO: Ajustamos la altura exacta restando 144px de la pantalla */}
+      <div className="flex h-[calc(100vh-144px)] gap-0 rounded-t-2xl overflow-hidden shadow-xl border-t border-x border-gray-200">
 
         {/* MAPA */}
         <div className="flex-1 relative">
@@ -255,7 +257,6 @@ export default function Predictor() {
                 <ScoreRing puntuacion={resultado.puntuacion} />
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-gray-800 leading-snug">
-
                     {resultado.resumen}
                   </p>
                   {resultado.luna && (
@@ -323,4 +324,4 @@ export default function Predictor() {
       </div>
     </div>
   )
-} 
+}

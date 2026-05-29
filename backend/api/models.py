@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 
 class Especie(models.Model):
@@ -28,6 +30,7 @@ class Spot(models.Model):
     latitud = models.FloatField()
     longitud = models.FloatField()
     descripcion = models.TextField(blank=True)
+    es_personalizado = models.BooleanField(default=False, help_text="True si fue creado desde el mapa libre")
 
     def __str__(self):
         return f"{self.nombre} ({self.tipo})"
@@ -51,3 +54,14 @@ class Captura(models.Model):
 
     def __str__(self):
         return f"{self.especie} en {self.spot} - {self.fecha}"
+
+
+@receiver(post_delete, sender=Captura)
+def limpiar_spot_personalizado(sender, instance, **kwargs):
+    """Borra el spot personalizado si ya no tiene capturas tras eliminar una."""
+    try:
+        spot = instance.spot
+        if spot.es_personalizado and not spot.capturas.exists():
+            spot.delete()
+    except Spot.DoesNotExist:
+        pass

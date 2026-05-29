@@ -17,6 +17,9 @@ class SpotSerializer(serializers.ModelSerializer):
 class CapturaSerializer(serializers.ModelSerializer):
     especie_nombre = serializers.CharField(source='especie.nombre', read_only=True)
     spot_nombre = serializers.CharField(source='spot.nombre', read_only=True)
+    # Coordenadas del spot para el mapa del diario
+    spot_latitud = serializers.FloatField(source='spot.latitud', read_only=True)
+    spot_longitud = serializers.FloatField(source='spot.longitud', read_only=True)
     # Devuelve la URL completa de la foto (ej: http://localhost:8000/media/capturas/foto.jpg)
     foto_url = serializers.SerializerMethodField()
 

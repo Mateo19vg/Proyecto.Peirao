@@ -41,6 +41,15 @@ class CapturaViewSet(viewsets.ModelViewSet):
             qs = qs.filter(notas__icontains=search)
         return qs
 
+    def destroy(self, request, *args, **kwargs):
+        # Llamamos a instance.delete() (no queryset.delete()) para que
+        # el método delete() del modelo pueda limpiar el spot personalizado
+        instance = self.get_object()
+        instance.delete()
+        from rest_framework import status
+        from rest_framework.response import Response
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 def prediccion(request):

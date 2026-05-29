@@ -11,7 +11,7 @@ export default function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-ocean-50">
         <Navbar />
-        <main className="max-w-4xl mx-auto px-4 py-8">
+        <main className="w-full">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/predictor" element={<Predictor />} />

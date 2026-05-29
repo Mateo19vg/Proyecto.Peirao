@@ -62,6 +62,8 @@ export default function Log() {
     if (!confirm('¿Seguro que queres borrar esta captura do teu diario?')) return
     await deleteCaptura(id)
     cargar()
+    // Refresca la lista de spots para que desaparezcan los puntos libres borrados
+    getSpots().then(res => setSpots(res.results || res || []))
   }
 
   // Asegura que listado sea siempre un array para evitar errores de .length o .map
