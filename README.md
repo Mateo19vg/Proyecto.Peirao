@@ -1,51 +1,102 @@
-## 🚀 Guía de Instalación y Arranque
+# 🐟 Proyecto Peirao
+
+## 📋 Requisitos previos
+
+Antes de empezar, asegúrate de tener instalado en tu sistema:
+
+- **Python** 3.10 o superior → [descargar](https://www.python.org/downloads/)
+- **Node.js** 18 o superior (incluye npm) → [descargar](https://nodejs.org/)
+- **Git** → [descargar](https://git-scm.com/)
+
+Puedes verificar las versiones con:
+```bash
+python --version
+node --version
+npm --version
+```
+
+---
+
+## 🚀 Guía de instalación paso a paso
 
 ### 1. Clonar el repositorio
-Abre una terminal y clona el proyecto en tu equipo:
+
 ```bash
-git clone [https://github.com/Mateo19vg/Proyecto.Peirao.git](https://github.com/Mateo19vg/Proyecto.Peirao.git)
+git clone https://github.com/Mateo19vg/Proyecto.Peirao.git
 cd Proyecto.Peirao
-2. Configuración del Backend (Django)
-Puedes configurar el backend ejecutando los siguientes comandos:
+```
 
-Crear e iniciar el entorno virtual
-En Linux/macOS:
+---
 
-Bash
+### 2. Configuración del Backend (Django)
+
+#### 2.1 Ir a la carpeta del backend
+
+```bash
+cd backend
+```
+
+#### 2.2 Crear el entorno virtual
+
+En **Linux/macOS**:
+```bash
 python3 -m venv venv
 source venv/bin/activate
-En Windows (PowerShell):
+```
 
-PowerShell
+En **Windows (PowerShell)**:
+```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-Instalar las dependencias de Python
-Asegúrate de que estás en la carpeta raíz o donde se aloje el archivo requirements.txt:
+```
 
-Bash
+> Sabrás que el entorno está activo cuando veas `(venv)` al inicio de la línea de tu terminal.
+
+#### 2.3 Instalar las dependencias de Python
+
+```bash
 pip install -r requirements.txt
-Ejecutar las migraciones de la Base de Datos
-Crea la estructura de tablas de SQLite (modelos de Especie, Spot y Captura):
+```
 
-Bash
+#### 2.4 Aplicar las migraciones (crea la base de datos)
+
+```bash
 python manage.py migrate
-Cargar los datos iniciales (Fixtures)
-Para no empezar con la aplicación vacía, carga los datos de ejemplo preconfigurados (especies y spots de pesca):
+```
 
-Bash
+Esto genera automáticamente el archivo `db.sqlite3` con todas las tablas necesarias (Especie, Spot, Captura).
+
+#### 2.5 Cargar los datos iniciales
+
+```bash
 python manage.py loaddata initial_data.json
-Iniciar el servidor de desarrollo del backend
-Bash
+```
+
+> El archivo `initial_data.json` se encuentra en `backend/` y contiene especies y spots de pesca preconfigurados.
+
+#### 2.6 Iniciar el servidor backend
+
+```bash
 python manage.py runserver
-El backend estará disponible y escuchando peticiones en http://localhost:8000/. Puedes visitar http://localhost:8000/api/ para inspeccionar la API REST a través del explorador interactivo.
+```
 
-3. Configuración del Frontend (React + Vite)
-Abre otra ventana de la terminal (manteniendo el servidor de Django corriendo) y dirígete a la carpeta del frontend para inicializarlo:
+El backend estará disponible en: **http://localhost:8000/**  
+Puedes explorar la API en: **http://localhost:8000/api/**
 
-Instalar las dependencias de Node.js
-Bash
+---
+
+### 3. Configuración del Frontend (React + Vite)
+
+Abre una **nueva terminal** (mantén el backend corriendo) y desde la raíz del proyecto:
+
+```bash
+cd frontend
 npm install
-Iniciar el servidor de desarrollo de Vite
-Bash
 npm run dev
-El frontend compilará y se levantará en http://localhost:5173/.
+```
+
+El frontend estará disponible en: **http://localhost:5173/**
+
+---
+
+## 🗂️ Estructura del proyecto
