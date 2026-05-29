@@ -97,6 +97,3 @@ npm run dev
 
 El frontend estará disponible en: **http://localhost:5173/**
 
----
-
-## 🗂️ Estructura del proyecto
