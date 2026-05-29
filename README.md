@@ -2,7 +2,7 @@
 2. Abre una terminal y clona el proyecto en tu equipo:
 git clone https://github.com/Mateo19vg/Proyecto.Peirao.git
 cd Proyecto.Peirao
-   Configuración del Backend (Django)
+3.   Configuración del Backend (Django)
 Puedes configurar el backend ejecutando los siguientes comandos:
 Crear e iniciar el entorno virtual:
 En Linux/macOS:
@@ -25,7 +25,7 @@ python manage.py runserver
 El backend estará disponible y escuchando peticiones en http://localhost:8000/.
 Puedes visitar http://localhost:8000/api/ para inspeccionar la API REST a través del explorador interactivo.
 
-  Configuración del Frontend (React + Vite)
+4.  Configuración del Frontend (React + Vite)
 Abre otra ventana de la terminal (manteniendo el servidor de Django corriendo) y dirígete a la carpeta del frontend para inicializarlo:
 Instalar las dependencias de Node.js:
 npm install
