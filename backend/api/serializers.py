@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Especie, Spot, Captura
+from django.contrib.auth.models import User
+from .models import Especie, Spot, Captura, Perfil
 
 
 class EspecieSerializer(serializers.ModelSerializer):
@@ -14,18 +15,62 @@ class SpotSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PerfilSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='usuario.username', read_only=True)
+    avatar_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Perfil
+        fields = ['id', 'username', 'avatar', 'avatar_url', 'bio', 'mostrar_nombre']
+        extra_kwargs = {'avatar': {'write_only': True}}
+
+    def get_avatar_url(self, obj):
+        if obj.avatar:
+            request = self.context.get('request')
+            return request.build_absolute_uri(obj.avatar.url) if request else obj.avatar.url
+        return None
+
+
 class CapturaSerializer(serializers.ModelSerializer):
     especie_nombre = serializers.CharField(source='especie.nombre', read_only=True)
     spot_nombre = serializers.CharField(source='spot.nombre', read_only=True)
-    # Coordenadas del spot para el mapa del diario
+
     spot_latitud = serializers.FloatField(source='spot.latitud', read_only=True)
     spot_longitud = serializers.FloatField(source='spot.longitud', read_only=True)
-    # Devuelve la URL completa de la foto (ej: http://localhost:8000/media/capturas/foto.jpg)
+
+    # Nombre público del pescador: respeta su preferencia de si es publico o privado
+    pescador_nombre = serializers.SerializerMethodField()
+    pescador_avatar = serializers.SerializerMethodField()
+    es_propia = serializers.SerializerMethodField()
+
     foto_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Captura
         fields = '__all__'
+        read_only_fields = ['usuario']
+
+    def get_pescador_nombre(self, obj):
+        if not obj.usuario:
+            return "Pescador anónimo"
+        perfil = getattr(obj.usuario, 'perfil', None)
+        if perfil and not perfil.mostrar_nombre:
+            return "Pescador anónimo"
+        return obj.usuario.username
+
+    def get_pescador_avatar(self, obj):
+        if not obj.usuario:
+            return None
+        perfil = getattr(obj.usuario, 'perfil', None)
+        if not perfil or not perfil.mostrar_nombre or not perfil.avatar:
+            return None
+        request = self.context.get('request')
+        return request.build_absolute_uri(perfil.avatar.url) if request else perfil.avatar.url
+
+    def get_es_propia(self, obj):
+        request = self.context.get('request')
+        user = getattr(request, 'user', None)
+        return bool(user and user.is_authenticated and obj.usuario_id == user.id)
 
     def get_foto_url(self, obj):
         if obj.foto:
@@ -34,12 +79,7 @@ class CapturaSerializer(serializers.ModelSerializer):
         return None
 
 
-class PrediccionSerializer(serializers.Serializer):
-    """Serializador de salida para el predictor. No mapea un modelo."""
-    spot_id = serializers.IntegerField()
-    especie_id = serializers.IntegerField()
-    puntuacion = serializers.IntegerField(help_text="0-100, qué tan buenas son las condiciones")
-    resumen = serializers.CharField()
-    temperatura_agua = serializers.FloatField()
-    velocidad_viento = serializers.FloatField()
-    descripcion_tiempo = serializers.CharField()
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']
