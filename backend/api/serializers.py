@@ -10,9 +10,34 @@ class EspecieSerializer(serializers.ModelSerializer):
 
 
 class SpotSerializer(serializers.ModelSerializer):
+    # Indica al frontend si el usuario actual puede ver este spot (para el mapa del predictor)
+    es_visible = serializers.SerializerMethodField()
+
     class Meta:
         model = Spot
         fields = '__all__'
+
+    def get_es_visible(self, obj):
+        # Spots globales (sin creador): siempre visibles
+        if not obj.creador_id:
+            return True
+        request = self.context.get('request')
+        user = getattr(request, 'user', None)
+        # El propio creador siempre ve sus spots
+        if user and user.is_authenticated and obj.creador_id == user.id:
+            return True
+        # Spots de otro usuario: visibles solo si ese usuario tiene perfil público AND el usuario actual tiene perfil público
+        if not user or not user.is_authenticated:
+            return False
+        try:
+            perfil_propio = user.perfil
+            if not perfil_propio.es_publico:
+                return False
+        except Perfil.DoesNotExist:
+            return False
+
+        perfil = getattr(obj.creador, 'perfil', None)
+        return bool(perfil and perfil.es_publico)
 
 
 class PerfilSerializer(serializers.ModelSerializer):
@@ -21,7 +46,7 @@ class PerfilSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Perfil
-        fields = ['id', 'username', 'avatar', 'avatar_url', 'bio', 'mostrar_nombre']
+        fields = ['id', 'username', 'avatar', 'avatar_url', 'bio', 'mostrar_nombre', 'es_publico']
         extra_kwargs = {'avatar': {'write_only': True}}
 
     def get_avatar_url(self, obj):
@@ -38,7 +63,7 @@ class CapturaSerializer(serializers.ModelSerializer):
     spot_latitud = serializers.FloatField(source='spot.latitud', read_only=True)
     spot_longitud = serializers.FloatField(source='spot.longitud', read_only=True)
 
-    # Nombre público del pescador: respeta su preferencia de si es publico o privado
+    # Nombre público del pescador: respeta su preferencia de anonimato
     pescador_nombre = serializers.SerializerMethodField()
     pescador_avatar = serializers.SerializerMethodField()
     es_propia = serializers.SerializerMethodField()

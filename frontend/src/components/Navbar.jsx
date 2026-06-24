@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 const linksBase = [
   { to: '/', label: 'Inicio' },
   { to: '/predictor', label: 'Predictor' },
+  { to: '/chat', label: 'SharkAI Chat' },
 ]
 
 const linksAuth = [

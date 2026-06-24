@@ -9,6 +9,7 @@ export default function Perfil() {
   const [perfil, setPerfil] = useState(null)
   const [bio, setBio] = useState('')
   const [mostrarNombre, setMostrarNombre] = useState(true)
+  const [esPublico, setEsPublico] = useState(true)
   const [avatarFile, setAvatarFile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [guardando, setGuardando] = useState(false)
@@ -22,8 +23,12 @@ export default function Perfil() {
         setPerfil(data)
         setBio(data.bio || '')
         setMostrarNombre(data.mostrar_nombre)
+        setEsPublico(data.es_publico)
       })
-      .catch(() => setError('No se pudo cargar el perfil.'))
+      .catch((err) => {
+        const msg = err.response?.data?.error || 'No se pudo cargar el perfil.'
+        setError(msg)
+      })
       .finally(() => setLoading(false))
   }, [usuarioId, esPropio])
 
@@ -33,6 +38,7 @@ export default function Perfil() {
       const form = new FormData()
       form.append('bio', bio)
       form.append('mostrar_nombre', mostrarNombre)
+      form.append('es_publico', esPublico)
       if (avatarFile) form.append('avatar', avatarFile)
       const actualizado = await updatePerfil(form)
       setPerfil(actualizado)
@@ -85,6 +91,15 @@ export default function Perfil() {
                 placeholder="Cuéntanos algo sobre ti como pescador..." />
               <span className="text-xs text-gray-400 text-right">{bio.length}/280</span>
             </div>
+
+            <label className="flex items-center gap-3 border border-gray-200 rounded-lg p-3 cursor-pointer select-none">
+              <input type="checkbox" checked={esPublico} onChange={e => setEsPublico(e.target.checked)}
+                className="accent-blue-600 w-4 h-4" />
+              <div>
+                <p className="text-sm font-semibold text-gray-700">Perfil público</p>
+                <p className="text-xs text-gray-400">Si lo desactivas (perfil privado), solo tú podrás ver tus capturas y zonas de pesca, y tú tampoco podrás ver las de otros pescadores.</p>
+              </div>
+            </label>
 
             <label className="flex items-center gap-3 border border-gray-200 rounded-lg p-3 cursor-pointer select-none">
               <input type="checkbox" checked={mostrarNombre} onChange={e => setMostrarNombre(e.target.checked)}

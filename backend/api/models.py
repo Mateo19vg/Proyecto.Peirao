@@ -11,6 +11,7 @@ class Perfil(models.Model):
     bio = models.TextField(max_length=280, blank=True)
     # Si es False, sus capturas se muestran como "Pescador anónimo" en vez de su username
     mostrar_nombre = models.BooleanField(default=True)
+    es_publico = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Perfil de {self.usuario.username}"
@@ -50,13 +51,20 @@ class Spot(models.Model):
     longitud = models.FloatField()
     descripcion = models.TextField(blank=True)
     es_personalizado = models.BooleanField(default=False, help_text="True si fue creado desde el mapa libre")
+    # Quién creó el spot: si None es un spot global (visible para todos)
+    creador = models.ForeignKey(
+        User, on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='spots_creados',
+        help_text="Si es None, el spot es global. Si tiene creador, la visibilidad depende de su perfil."
+    )
 
     def __str__(self):
         return f"{self.nombre} ({self.tipo})"
 
 
 class Captura(models.Model):
-    # Todas las capturas son públicas; la visibilidad del perfil depende de Perfil.mostrar_nombre del autor
+    # Todas las capturas son públicas; el anonimato depende de Perfil.mostrar_nombre del autor
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='capturas', null=True, blank=True)
 
     especie = models.ForeignKey(Especie, on_delete=models.CASCADE, related_name='capturas')

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { getCapturas, deleteCaptura, getEspecies, getSpots } from '../services/api'
+import { getCapturas, deleteCaptura, getEspecies, getSpots, getMiPerfil } from '../services/api'
+import { useAuth } from '../context/AuthContext'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -17,6 +18,8 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon
 
 export default function Log() {
+  const { isAuth } = useAuth()
+  const [miPerfilPrivado, setMiPerfilPrivado] = useState(false)
   // Mantener el estado estructurado
   const [data, setData] = useState({ count: 0, next: null, previous: null, results: [] })
   const [especies, setEspecies] = useState([])
@@ -32,6 +35,16 @@ export default function Log() {
     getEspecies().then(res => setEspecies(res.results || res || []))
     getSpots().then(res => setSpots(res.results || res || []))
   }, [])
+
+  useEffect(() => {
+    if (isAuth) {
+      getMiPerfil()
+        .then(perfil => setMiPerfilPrivado(!perfil.es_publico))
+        .catch(err => console.error(err))
+    } else {
+      setMiPerfilPrivado(false)
+    }
+  }, [isAuth])
 
   const cargar = useCallback(() => {
     const filters = { page: pagina }
@@ -76,6 +89,28 @@ export default function Log() {
   return (
     <div className="max-w-5xl mx-auto p-4">
       <h1 className="text-3xl font-bold text-blue-900 mb-6">Capturas dos pescadores</h1>
+
+      {miPerfilPrivado && (
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-2xl mb-6 text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+          <div>
+            <span className="font-semibold">Perfil privado:</span> Actualmente o teu perfil está configurado como privado. Só podes ver as túas propias capturas e zonas de pesca, e outros pescadores tampoco poderán ver as túas.
+          </div>
+          <Link to="/perfil" className="text-amber-950 font-bold underline whitespace-nowrap hover:text-amber-900">
+            Cambiar a Público
+          </Link>
+        </div>
+      )}
+
+      {!isAuth && (
+        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-2xl mb-6 text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+          <div>
+            <span className="font-semibold">Modo Visitante:</span> Para poder ver as capturas e zonas de pesca de outros pescadores de O Peirao, debes iniciar sesión e configurar o teu perfil como público.
+          </div>
+          <Link to="/login" className="text-blue-950 font-bold underline whitespace-nowrap hover:text-blue-900">
+            Iniciar sesión
+          </Link>
+        </div>
+      )}
 
       {/* 1. Mapa de Actividad */}
       <div className="bg-white rounded-3xl shadow-lg border border-blue-50 p-4 mb-8">

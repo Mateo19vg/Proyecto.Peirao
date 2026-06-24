@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import EspecieViewSet, SpotViewSet, CapturaViewSet, PerfilView, prediccion, register_user
+from .views import EspecieViewSet, SpotViewSet, CapturaViewSet, PerfilView, prediccion, register_user, ChatAsistenteView
 
 router = DefaultRouter()
 router.register(r'especies', EspecieViewSet, basename='especie')
@@ -19,6 +19,7 @@ urlpatterns = [
     # Perfil propio (GET/PUT) y perfil público de otro usuario (GET)
     path('perfil/', PerfilView.as_view(), name='perfil_propio'),
     path('perfil/<int:usuario_id>/', PerfilView.as_view(), name='perfil_publico'),
+    path('chat/', ChatAsistenteView.as_view(), name='chat_asistente'),
 ]
 
 # Endpoints reales de la API:

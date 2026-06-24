@@ -96,6 +96,8 @@ export const updatePerfil  = (formData) => API.put('/perfil/', formData, {
   headers: { 'Content-Type': 'multipart/form-data' }
 }).then(r => r.data)
 
+export const enviarMensajeChat = (chatData) => API.post('/chat/', chatData).then(r => r.data)
+
 export const getCapturas   = (params) => API.get('/capturas/', { params }).then(r => r.data)
 
 export const createCaptura = (form)   => {

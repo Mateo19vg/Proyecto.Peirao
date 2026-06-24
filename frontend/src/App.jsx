@@ -10,6 +10,7 @@ import AddCaptura from './pages/AddCaptura'
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Perfil from './pages/Perfil';
+import Chat from './pages/Chat';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/log" element={<Log />} />
+              <Route path="/chat" element={<Chat />} />
               <Route path="/add" element={<PrivateRoute><AddCaptura /></PrivateRoute>} />
               <Route path="/perfil" element={<PrivateRoute><Perfil /></PrivateRoute>} />
               <Route path="/perfil/:usuarioId" element={<Perfil />} />
