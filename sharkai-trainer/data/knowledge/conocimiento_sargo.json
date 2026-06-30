@@ -1,0 +1,25 @@
+{
+  "especie": "sargo",
+  "nombre_comun": "Sargu",
+  "nombre_cientifico": "Diplodus sargus",
+  "descripcion_breve": "Pez de agua salada, común en el Mar Mediterráneo. Se alimenta de crustáceos y peces pequeños.",
+  "habitat": "Mar Mediterráneo, aguas profundas hasta 100 metros",
+  "distribucion_galicia": "Costas de Galicia, especialmente en las rías y aguas arenosas poco profundas",
+  "temporada_pesca": "Abril a agosto",
+  "tecnicas_recomendadas": [
+    "Pulga",
+    "Cabo de seda"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "50 cm",
+  "record_talla": "100 cm",
+  "curiosidades_pescador": "Se alimentan de crustáceos y peces pequeños.",
+  "consejos_galicia": "En las rías gallegas, es importante pescar en aguas arenosas poco profundas y cerca de la costa.",
+  "_fuente": "Wikipedia - Sargo",
+  "_url": "https://es.wikipedia.org/wiki/Diplodus_sargus",
+  "_fecha_procesado": "2026-06-27T12:42:13.924795",
+  "_doc_id": "5aa463ffaf"
+}

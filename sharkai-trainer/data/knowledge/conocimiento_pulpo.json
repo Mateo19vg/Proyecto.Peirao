@@ -1,0 +1,25 @@
+{
+  "especie": "pulpo",
+  "nombre_comun": "pulpo común",
+  "nombre_cientifico": "Octopus vulgaris",
+  "descripcion_breve": "Animal carnívoro nocturno que se alimenta de crustáceos y peces, con capacidad para mimetizarse y regenerar sus brazos.",
+  "habitat": "Aguas superficiales hasta 100 metros de profundidad",
+  "distribucion_galicia": "Costas gallegas, especialmente en las rías",
+  "temporada_pesca": "Abril-octubre",
+  "tecnicas_recomendadas": [
+    "Arrojo",
+    "Red con cebo"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "25 cm",
+  "record_talla": "No disponible",
+  "curiosidades_pescador": "Pulpos pueden regenerar sus brazos si son amputados",
+  "consejos_galicia": "En las rías gallegas, busca fondos rocosos y arenosos para encontrar pulpos",
+  "_fuente": "Wikipedia - Pulpo común",
+  "_url": "https://es.wikipedia.org/wiki/Octopus_vulgaris",
+  "_fecha_procesado": "2026-06-27T12:41:55.553657",
+  "_doc_id": "9a8df4d13e"
+}

@@ -1,0 +1,147 @@
+{
+  "fecha": "2026-06-27T12:43:30.721043",
+  "modelo_evaluado": "sharkai:latest",
+  "total_preguntas": 9,
+  "puntuacion_media": 7.11,
+  "nivel_actual": "Avanzado 📈",
+  "por_mejorar": [],
+  "resultados": [
+    {
+      "especie": "calamar",
+      "pregunta": "¿Cómo se pesca el calamar con técnica de jigging?",
+      "respuesta": "O tempo da pesca de calamar con técnica de jigging é unha forma de pescar que consiste en usar un cebo fijo e moverlo suavemente na superficie do mar, imitando a caída de un peixe vivo. É una técnica popular entre os pescadores deportivos da Galicia.\n\n**Preparación**\n\nAntes de empezar, asegúrate de ter:\n\n*   Un cebo adecuado para calamar (como anchoas, arenques ou polvo).\n*   Un jigging que se ajuste ao tamaño do cebo e ao tipo de pesca que estás realizando.\n*   Un hilo resistente y un anzuel adecuado.\n\n**Técnica**\n\n1.  Encontrar un buen lugar para pescar, como fondos rocosos o arenosos, é fundamental.\n2.  Coloca o cebo no jigging e suavemente mueveo a superficie do mar, imitando a caída de un peixe vivo.\n3.  Cuando detectas un bite, aprieta o anzuel con firmeza pero sin excesiva fuerza.\n4.  Mantén el jigging en movimiento para evitar que el calamar se escape.\n\n**Consejos**\n\n*   Asegúrate de usar un cebo adecuado y de tamaño apropriado para el tipo de pesca que",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Encontrar un buen lugar para pescar, como fondos rocosos o arenosos, é fundamental."
+        ],
+        "sugerencia_mejora": "La respuesta debería incluir técnicas específicas de pesca deportiva gallega para pescar calamar y evitar términos no relevantes"
+      }
+    },
+    {
+      "especie": "calamar",
+      "pregunta": "¿A qué horas del día tiene más actividad el calamar?",
+      "respuesta": "O tempo do calamar é un pouco irregular, pero en general, a actividade do calamar está ligada á marea. Durante a marea baixa, os calamares se acostumam a moverse para as áreas de fondos rocosos e arenosos, onde se alimentan.\n\nEn termos de horas do día, o calamar é un pouco activo durante a noite, especialmente durante a marea alta. A súa actividade é maior entre as 22h e as 2h da madrugada, cando a marea está en seu punto máximo.\n\nNo entanto, é importante destacar que a actividade do calamar pode variar dependendo da época do ano, da temperatura do mar e de outras condições ambientais. Por isso, é sempre recomendable consultar as normativas da Consellería do Mar de Galicia e seguir as técnicas de pesca deportiva adecuadas para cada época del año.\n\nSe estás planeando pescar calamar en Galicia, te recomiendo que consultes as normativas da Consellería do Mar e sigas as seguintes horas:\n\n*   Marea alta: 22h-2h da madrugada\n*   Marea baixa: 10h-14h\n\nLembre-se de que a actividade do calamar pode variar dependendo das condições ambientais, por isso é sempre recomendable",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Mención a la variabilidad de la actividad del calamar dependiendo de la época del año, la temperatura del mar y otras condiciones ambientales"
+        ],
+        "sugerencia_mejora": "La respuesta podría mejorar incluyendo una mención específica sobre cómo las normativas de la Consellería do Mar de Galicia pueden ayudar a los pescadores a planificar su pesca de manera más efectiva"
+      }
+    },
+    {
+      "especie": "calamar",
+      "pregunta": "¿Qué tamaño de egi es mejor para el calamar gallego?",
+      "respuesta": "Non, non, non! Non inventes datos, amigo mío. A mi conocimiento, no tengo información específica sobre el tamaño óptimo de egi para el calamar gallego. La Consellería do Mar de Galicia establece normativas específicas para la pesca de calamar, pero no tengo acceso a esa información en este momento.\n\nTe recomiendo consultar directamente con la Consellería do Mar de Galicia o visitar su sitio web (https://www.xunta.gal/mar) para obtener la información más actualizada y precisa sobre las normativas de pesca de calamar en Galicia.",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "La Consellería do Mar de Galicia establece normativas específicas para la pesca de calamar"
+        ],
+        "sugerencia_mejora": "Mencionar el tipo de egi recomendado en lugar de 'tamaño óptimo' sería más preciso"
+      }
+    },
+    {
+      "especie": "dorada",
+      "pregunta": "¿Cuál es el mejor cebo natural para pescar dorada?",
+      "respuesta": "Para pescar dorada, te recomiendo utilizar cebos naturales como:\n\n*   Cepa de polvo: Es un cebo muy efectivo y se puede preparar mezclando polvo de pescado (generalmente arenque o anchoa) con un poco de agua. Se puede aplicar directamente sobre la pulga o en el cabo de seda.\n*   Cepa de harina: Similar al polvo, pero se hace mezclando harina de pescado con un poco de agua y se aplica sobre la pulga o en el cabo de seda.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Cepa de polvo",
+          "Cepa de harina"
+        ],
+        "sugerencia_mejora": "La respuesta debería mencionar que la cepa de arenque también es efectiva y se puede utilizar en lugar de polvo o harina"
+      }
+    },
+    {
+      "especie": "dorada",
+      "pregunta": "¿Qué técnica de pesca es más efectiva para la dorada desde costa?",
+      "respuesta": "Para pescar doradas desde la costa en Galicia, te recomiendo utilizar técnicas de pulga y cabo de seda. Estas técnicas son muy efectivas para capturar doradas en las rías gallegas.\n\nLa técnica de pulga consiste en lanzar una línea con un cebo que imita a la presa, como un cabo de seda o una cepa de polvo. La idea es que el dorado se acerque al cebo y lo coma, y luego te lo pescas.\n\nLa técnica de cabo de seda es similar, pero utiliza un cebo más grande y pesado, como una anchoa o un arenque. Esto atrae a las doradas desde una distancia mayor y aumenta las posibilidades de capturarlas.\n\nAmbas técnicas requieren paciencia y habilidad para lanzar la línea en el momento correcto. Es importante elegir un lugar con fondos rocosos y arenosos, ya que estas áreas suelen ser hábitat natural de las doradas.\n\nRecuerda que es importante seguir las normativas establecidas por la Consellería do Mar de Galicia para la pesca de dorada, y asegurarte de tener el permiso necesario antes de comenzar a pescar.",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Menciona técnicas efectivas",
+          "Recuerda a seguir normativas"
+        ],
+        "sugerencia_mejora": "Añadir información sobre la importancia de elegir un lugar con fondos rocosos y arenosos"
+      }
+    },
+    {
+      "especie": "lubina",
+      "pregunta": "¿En qué época del año es mejor pescar lubina en las rías gallegas?",
+      "respuesta": "En Galicia, a la lubina le gusta pescar en primavera e invierno. Aunque no hay una temporada de pescado específica para esta especie, se recomienda pescar desde abril hasta junio y septiembre hasta noviembre.\n\nDurante este período, las aguas son más frescas y el clima es más suave, lo que hace que sea ideal para la lubina. Además, en estas épocas del año, las corrientes marinas son menos intensas, lo que facilita la búsqueda de fondos rocosos y arenosos donde se encuentra esta especie.\n\nEn particular, en las rías gallegas, como Vigo y Cangas do Morrazo, es recomendable pescar durante los meses de primavera (abril a junio) cuando el agua está más fresca y el clima es más suave. En invierno (septiembre a noviembre), también se puede encontrar lubina en estas áreas, aunque la temperatura del agua puede ser un poco más baja.\n\nRecuerda que siempre debes seguir las normativas de pesca establecidas por la Consellería do Mar de Galicia y respetar el tamaño mínimo legal para esta especie.",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Menciona la temporada de pescado específica en Galicia"
+        ],
+        "sugerencia_mejora": "Asegurarse de mencionar el tamaño mínimo legal para la lubina en las rías gallegas"
+      }
+    },
+    {
+      "especie": "lubina",
+      "pregunta": "¿Qué señuelos son más efectivos para la lubina de surf?",
+      "respuesta": "Para pescar lubina de surf en Galicia, te recomiendo utilizar señuelos que imiten a sus presas naturales. La lubina de surf se alimenta principalmente de crustáceos y moluscos, como anchoas, arenques y otros peces pequeños.\n\nAlgunos señuelos efectivos para la lubina de surf son:\n\n*   Anchoas frescas o congeladas\n*   Arenques frescos o congelados\n*   Cepa de polvo (conocida como \"cepa de arenque\" en Galicia)\n*   Cepa de harina (similar a la cepa de polvo, pero con una textura más fina)\n\nEs importante recordar que la lubina de surf es un pescado muy exigente y requiere señuelos de alta calidad. Utiliza señuelos frescos y de buena calidad para aumentar tus posibilidades de éxito.\n\nTambién te recomiendo utilizar técnicas de pesca deportiva adecuadas, como el uso de cebo suave y la selección de fondos rocosos y arenosos donde se encuentran las lubinas.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "La lubina de surf se alimenta principalmente de crustáceos y moluscos, como anchoas, arenques y otros peces pequeños."
+        ],
+        "sugerencia_mejora": "Falta mencionar técnicas específicas para la pesca de surf en Galicia"
+      }
+    },
+    {
+      "especie": "rodaballo",
+      "pregunta": "¿A qué profundidad vive el rodaballo en las costas gallegas?",
+      "respuesta": "O rodaballo vive en fondos marinos de arena, fango ou grava, desde aguas someras até os 100 m de profundidade.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "menciona la profundidad correcta"
+        ],
+        "sugerencia_mejora": "Menciona que el rodaballo se encuentra en aguas arenosas poco profundas, específicamente entre 0-100 m de profundidad"
+      }
+    },
+    {
+      "especie": "rodaballo",
+      "pregunta": "¿Cuál es la mejor época para pescar rodaballo en Galicia?",
+      "respuesta": "O mellor tempo para pescar rodaballo en Galicia é durante a primavera e o verán, desde abril até agosto. Durante estes meses, as aguas están cálidas e os fondos rocosos y arenosos son ideais para encontrar rodaballos.\n\nA temperatura do agua é un factor importante para a presenza de rodaballos en Galicia. Durante o verán, a temperatura do agua sube e se sitúa entre os 18°C e os 22°C, lo que é ideal para a vida dos rodaballos.\n\nAdemais, durante a primavera e o verán, as mareas son ideais para pescar rodaballo. As mareas altas tragan en fondos rocosos e arenosos, lo que é un lugar óptimo para encontrar rodaballos.\n\nEn resumo, se non estás en Galicia durante a primavera e o verán, é difícil encontrar rodaballos. Pero se te podes puxar ao mar durante estes meses, é probable que te saques um buen peixe.",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Menciona la temporada de primavera e verán como la mejor época para pescar rodaballo en Galicia"
+        ],
+        "sugerencia_mejora": "La respuesta debería mencionar que la temperatura del agua es un factor importante y que las mareas altas son ideales para pescar rodaballo"
+      }
+    }
+  ]
+}

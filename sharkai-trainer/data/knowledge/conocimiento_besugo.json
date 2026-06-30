@@ -1,0 +1,22 @@
+{
+  "especie": "besugo",
+  "nombre_comun": "besugo",
+  "nombre_cientifico": "Pagellus bogaraveo",
+  "descripcion_breve": "Pez perciforme común en el litoral atlántico europeo y mar Mediterráneo, omnívoro que se alimenta de crustáceos e invertebrados.",
+  "habitat": "700-800 m en el Atlántico y 400 m en el Mediterráneo",
+  "distribucion_galicia": "Costas de Galicia, Islas Orkney y Noruega",
+  "temporada_pesca": "Junio a septiembre",
+  "tecnicas_recomendadas": [
+    "Red de pesca",
+    "Palangre"
+  ],
+  "cebos_efectivos": [],
+  "talla_minima_legal": "25 cm",
+  "record_talla": "60 cm",
+  "curiosidades_pescador": "Se alimenta de crustáceos e invertebrados y peces pequeños.",
+  "consejos_galicia": "Busca fondos rocosos y arenosos en las rías gallegas",
+  "_fuente": "Wikipedia - Besugo",
+  "_url": "https://es.wikipedia.org/wiki/Pagellus_bogaraveo",
+  "_fecha_procesado": "2026-06-27T13:12:42.077935",
+  "_doc_id": "12dc97cc5e"
+}
