@@ -1,0 +1,23 @@
+[
+  {
+    "ciclo": 1,
+    "fecha": "2026-06-27T12:38:16.253913",
+    "puntuacion": 5.69,
+    "nivel": "Básico 📚",
+    "especies": 10
+  },
+  {
+    "ciclo": 2,
+    "fecha": "2026-06-27T12:40:52.290590",
+    "puntuacion": 5.56,
+    "nivel": "Básico 📚",
+    "especies": 10
+  },
+  {
+    "ciclo": 3,
+    "fecha": "2026-06-27T12:43:32.806421",
+    "puntuacion": 7.11,
+    "nivel": "Avanzado 📈",
+    "especies": 10
+  }
+]

@@ -1,0 +1,193 @@
+{
+  "fecha": "2026-06-27T12:28:11.225868",
+  "modelo_evaluado": "sharkai:latest",
+  "total_preguntas": 11,
+  "puntuacion_media": 5.09,
+  "nivel_actual": "Básico 📚",
+  "por_mejorar": [
+    "Debería mencionar que la respuesta no está respaldada por fuentes confiables y que es importante consultar fuentes especializadas para obtener información precisa sobre la pesca de calamares en Galicia.",
+    "La respuesta debería mencionar la especie correcta y no confundirla con otra",
+    "Proporcionar información precisa y específica sobre técnicas de pesca efectivas para dorada en Galicia",
+    "La respuesta debe coincidir con la información de referencia y mencionar específicamente la distribución de la lubina en Galicia"
+  ],
+  "resultados": [
+    {
+      "especie": "general",
+      "pregunta": "¿Cómo afectan las mareas a la pesca en las rías gallegas?",
+      "respuesta": "Las mareas son un factor clave en la pesca deportiva en las rías gallegas. La gravedad de la marea influye directamente en el acceso y la disponibilidad de los peces.\n\nEn general, hay dos tipos de mareas que afectan a la pesca: la marea alta y la marea baja.\n\n**Marea Alta**\n\nDurante la marea alta, el agua se acerca más al suelo, lo que hace que los peces se refugien en áreas más profundas o en estructuras submarinas. Esto puede hacer que sea más difícil de alcanzarlos con una caña de pesca tradicional.\n\nSin embargo, la marea alta también puede ser beneficiosa para la pesca, ya que muchos peces como la lubina y el calamar se acercan a la superficie en busca de alimento durante este período. Además, las estructuras submarinas como arrecifes y rocas pueden ofrecer refugio a los peces durante la marea alta.\n\n**Marea Baja**\n\nDurante la marea baja, el agua se aleja del suelo, lo que hace que los peces se muevan hacia áreas más profundas en busca de protección. Esto puede hacer que sea más fácil de alcanzarlos con una caña de pesca tradicional.\n\nLa marea baja también es ideal para la pesca de especies como el dorado y el rod",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "error1"
+        ],
+        "aciertos_destacados": [
+          "La gravedad de la marea influye directamente en el acceso y la disponibilidad de los peces."
+        ],
+        "sugerencia_mejora": "Debería mencionar específicamente las rías gallegas y cómo afectan las mareas a la pesca en esta región"
+      }
+    },
+    {
+      "especie": "calamar",
+      "pregunta": "¿Cómo se pesca el calamar con técnica de jigging?",
+      "respuesta": "La pesca de calamar con técnica de jigging es una de mis favoritas en las rías gallegas. Aquí te explico paso a paso cómo hacerlo:\n\n**Materiales necesarios:**\n\n* Jig (o \"pulpo\" en gallego) de 1-2 kg\n* Hilo de pesca resistente\n* Loco o cebo para calamar\n* Rodal o polea para el jig\n\n**Preparación del jig:**\n\n* Elige un jig de tamaño adecuado para la profundidad y tipo de calamar que busques.\n* Asegúrate de que el jig esté bien engrasado con loco o cebo para calamar.\n\n**Técnica de pesca:**\n\n1. **Ubicación:** Busca áreas con fondos rocosos o con estructuras submarinas, como arrecifes o bancos de arena.\n2. **Posición del jig:** Sostén el jig en la mano derecha, con la punta hacia abajo y el extremo más largo hacia arriba.\n3. **Caída del jig:** Caiga el jig hacia abajo, manteniendo la mano derecha firme, hasta que llegue a una profundidad de 10-20 metros.\n4. **Subida del jig:** Cuando el calamar se acerque al jig, suba rápidamente el jig hacia",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "La pesca de calamar con técnica de jigging es una de mis favoritas en las rías gallegas"
+        ],
+        "sugerencia_mejora": "Se debería especificar la profundidad y el tipo de cebo utilizado"
+      }
+    },
+    {
+      "especie": "calamar",
+      "pregunta": "¿A qué horas del día tiene más actividad el calamar?",
+      "respuesta": "En Galicia, la actividad del calamar es bastante variable dependiendo de la época del año y las condiciones climáticas. Sin embargo, en general, se puede decir que el calamar tiene su mayor actividad durante la noche.\n\nLa mayoría de los pescadores locales coinciden en que el calamar es más activo entre las 22:00 y las 02:00 horas, cuando la oscuridad y la falta de luz del sol permiten que se mueva sin distracciones. Durante este período, también hay una mayor concentración de peces en la superficie del agua, lo que facilita su captura.\n\nEs importante tener en cuenta que estas son solo tendencias generales y que las condiciones específicas pueden variar dependiendo de la zona y el momento del año.",
+      "evaluacion": {
+        "puntuacion": 8,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Coincide con la información proporcionada"
+        ],
+        "sugerencia_mejora": "La respuesta podría ser más precisa si se basara en fuentes específicas de datos sobre la actividad del calamar en Galicia"
+      }
+    },
+    {
+      "especie": "calamar",
+      "pregunta": "¿Qué tamaño de egi es mejor para el calamar gallego?",
+      "respuesta": "Un tema muy importante para cualquier pescador gallego!\n\nEn cuanto al tamaño del egi (o \"eje\" en gallego) para el calamar, la respuesta puede variar dependiendo de varios factores como la época del año, las condiciones climáticas y la calidad del calamar.\n\nEn general, se recomienda utilizar egis de entre 2 y 3 metros de largo para capturar calamares en las rías gallegas. Esto te permite alcanzar los calamares más grandes y obtener mejores resultados.\n\nSin embargo, si estás pescando en aguas más profundas o en épocas de alta actividad de los calamares, es posible que necesites utilizar egis más largos, hasta 4 metros o incluso más. Pero recuerda que el tamaño del egi también depende de la potencia y eficiencia de tu motor, así como de las condiciones del agua.\n\nEn resumen, un egi de 2-3 metros es una buena opción para capturar calamares en las rías gallegas, pero siempre es importante adaptar el tamaño al contexto específico de cada pescada.",
+      "evaluacion": {
+        "puntuacion": 4,
+        "precision_tecnica": "baja",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "falta de información específica sobre el tamaño de egi recomendado en Galicia"
+        ],
+        "aciertos_destacados": [],
+        "sugerencia_mejora": "Debería mencionar que la respuesta no está respaldada por fuentes confiables y que es importante consultar fuentes especializadas para obtener información precisa sobre la pesca de calamares en Galicia."
+      }
+    },
+    {
+      "especie": "dorada",
+      "pregunta": "¿Cuál es el mejor cebo natural para pescar dorada?",
+      "respuesta": "La dorada es un pez muy exigente, pero con el cebo en la mano correcto, puedes aumentar tus posibilidades de éxito.\n\nEn Galicia, donde me especializo, creo que el mejor cebo natural para pescar dorada son los siguientes:\n\n1. **Higos secos**: Los higos secos son una excelente opción para atraer a las doradas. La dulzura y la textura del higo se parecen mucho a la comida natural de estas especies.\n2. **Cepas frescas**: Las cepas frescas, especialmente las de la familia Lamiaceae (como el tomillo o el orégano), son muy atractivas para las doradas.\n3. **Pescado desmenuzado**: El pescado desmenuzado, como el bacalao o el merluza, también es un buen cebo para las doradas.\n\nRecuerda que la clave es utilizar un cebo natural y fresco, ya que las doradas son muy sensibles a los olores artificiales. También es importante utilizar una caña ligera y una línea de buena calidad para no sobrecargar al pez.\n\n¿Quieres saber más sobre técnicas de pesca o consejos para pescar dorada en Galicia?",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "1. Higos secos",
+          "2. Cepas frescas",
+          "3. Pescado desmenuzado"
+        ],
+        "sugerencia_mejora": "La respuesta podría ser más precisa si incluyera la cantidad de higos secos o cepas frescas recomendadas"
+      }
+    },
+    {
+      "especie": "dorada",
+      "pregunta": "¿En qué zonas de las rías gallegas abunda la dorada?",
+      "respuesta": "La dorada, también conocida como dorada común (Scomber scombrus), es una especie de pescado que se encuentra en las aguas del Atlántico Norte y el Mediterráneo. En Galicia, se puede encontrar en varias zonas de las rías y costas.\n\nEn particular, la dorada suele encontrarse en áreas con corrientes oceánicas fuertes, como:\n\n*   La ría de A Coruña: Es una de las zonas más productivas para la dorada en Galicia. Se puede encontrar en aguas profundas y en áreas con estructuras submarinas.\n*   La ría de Vigo: La dorada también se encuentra en esta ría, especialmente en áreas con corrientes oceánicas fuertes.\n*   La ría de Pontevedra: En esta zona, la dorada suele encontrarse en aguas profundas y en áreas con estructuras submarinas.\n\nEs importante destacar que la disponibilidad de dorada puede variar según la época del año y las condiciones climáticas.",
+      "evaluacion": {
+        "puntuacion": 4,
+        "precision_tecnica": "baja",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "error1: La especie es Sparus aurata, no Scomber scombrus"
+        ],
+        "aciertos_destacados": [],
+        "sugerencia_mejora": "La respuesta debería mencionar la especie correcta y no confundirla con otra"
+      }
+    },
+    {
+      "especie": "dorada",
+      "pregunta": "¿Qué técnica de pesca es más efectiva para la dorada desde costa?",
+      "respuesta": "La dorada, ¡una pesca muy divertida!\n\nEn Galicia, donde las rías son ideales para esta especie, te recomiendo utilizar la técnica de \"pesca con cebo\" o \"pesca con cebo fijo\". Esta técnica consiste en lanzar una línea con un cebo fijo que imita a los invertebrados que se alimentan de dorada, como crustáceos o moluscos.\n\nMi recomendación es utilizar un cebo de calamar o langosta, ya que son muy atractivos para la dorada. También te recomiendo utilizar una línea de 10-15 kg y un hilo de 0,5-1 mm.\n\nLa técnica consiste en lanzar el cebo al fondo del río y esperar a que se acerque la dorada. Cuando lo haga, tiras suavemente hacia arriba para sacarlo de las aguas profundas. Es importante no tirar demasiado fuerte, ya que esto puede asustar o herir a la dorada.\n\nOtra técnica efectiva es la \"pesca con cebo fijo en la orilla\", donde lanzas el cebo desde la orilla del río y esperas a que se acerque la dorada. Esta técnica es especialmente efectiva cuando se utiliza un cebo de calamar o langosta.\n\nRecuerda que la paciencia",
+      "evaluacion": {
+        "puntuacion": 4,
+        "precision_tecnica": "baja",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "La técnica de 'pesca con cebo' no es la más efectiva",
+          "No se proporciona información sobre técnicas específicas"
+        ],
+        "aciertos_destacados": [],
+        "sugerencia_mejora": "Proporcionar información precisa y específica sobre técnicas de pesca efectivas para dorada en Galicia"
+      }
+    },
+    {
+      "especie": "lubina",
+      "pregunta": "¿Cuál es la talla mínima legal para la lubina en España?",
+      "respuesta": "La talla mínima legal para la lubina en España es de 30 cm de longitud, según el Reglamento (UE) 2021/821 del Parlamento Europeo y del Consejo.",
+      "evaluacion": {
+        "puntuacion": 0,
+        "precision_tecnica": "baja",
+        "menciona_galicia": false,
+        "errores_detectados": [
+          "talla mínima legal no coincide con la información de referencia",
+          "falta de contexto sobre la distribución gallega"
+        ],
+        "aciertos_destacados": [],
+        "sugerencia_mejora": "La respuesta debe coincidir con la información de referencia y mencionar específicamente la distribución de la lubina en Galicia"
+      }
+    },
+    {
+      "especie": "rodaballo",
+      "pregunta": "¿A qué profundidad vive el rodaballo en las costas gallegas?",
+      "respuesta": "El rodaballo es un pez que se encuentra comúnmente en las rías y bahías de Galicia, especialmente en aguas profundas.\n\nEn general, el rodaballo puede encontrarse entre 50 y 200 metros de profundidad, aunque algunos individuos pueden llegar a alcanzar profundidades de hasta 300 metros. En las áreas con fondos rocosos o con mucha vegetación marina, se han encontrado ejemplares en aguas más profundas.\n\nEn particular, en la zona de ría de A Coruña y ría de Vigo, el rodaballo suele encontrarse entre 100 y 150 metros de profundidad.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "baja",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "falta de profundidad específica",
+          "exceso de información"
+        ],
+        "aciertos_destacados": [
+          "habitat correcto"
+        ],
+        "sugerencia_mejora": "Debería mencionar la profundidad específica en las rías gallegas, como se indica en el conocimiento de referencia"
+      }
+    },
+    {
+      "especie": "rodaballo",
+      "pregunta": "¿Qué carnadas naturales prefiere el rodaballo?",
+      "respuesta": "El rodaballo es un pescado muy exigente, pero una vez que se conoce su comportamiento, se puede capturar con éxito.\n\nEn Galicia, donde me especializo, he visto que el rodaballo prefiere las carnadas naturales de:\n\n*   Amejicanos: son pequeños crustáceos que se encuentran en las profundidades de la ría y que atraen al rodaballo.\n*   Cangrejos: los cangrejos de ría, como el cangrejo de Galicia, también son una buena opción para carnadas naturales.\n\nTambién he visto que el rodaballo se puede atraer con carnadas artificiales como las \"lucios\" o \"sardinas\", pero en general, los amejicanos y los cangrejos son más efectivos.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [],
+        "aciertos_destacados": [
+          "Amejicanos",
+          "Cangrejos"
+        ],
+        "sugerencia_mejora": "Se debería mencionar que los amejicanos y cangrejos son carnadas naturales más efectivas en Galicia"
+      }
+    },
+    {
+      "especie": "rodaballo",
+      "pregunta": "¿Cuál es la mejor época para pescar rodaballo en Galicia?",
+      "respuesta": "La mejor época para pescar rodaballo en Galicia depende del lugar y de las condiciones climáticas, pero generalmente se considera que los meses de verano y principios de otoño son los más productivos.\n\nEn particular, el mes de agosto es considerado uno de los mejores para pescar rodaballo en la ría de A Coruña, mientras que en la ría de Vigo, septiembre y octubre son las épocas más favorables.\n\nEs importante tener en cuenta que la disponibilidad del rodaballo también depende de la marea y el clima. En general, es mejor pescar durante las mareas bajas, cuando el agua es más tranquila y los peces se acercan a la orilla.\n\nEn cuanto a las técnicas de pesca, el uso de cebo y redes de arrastre es muy efectivo para atrapar rodaballo en Galicia.",
+      "evaluacion": {
+        "puntuacion": 6,
+        "precision_tecnica": "alta",
+        "menciona_galicia": true,
+        "errores_detectados": [
+          "La respuesta no menciona la temporada de pescado específica para Galicia",
+          "No se proporciona información sobre técnicas de pesca efectivas"
+        ],
+        "aciertos_destacados": [
+          "La respuesta es generalmente correcta, aunque no proporciona detalles suficientes"
+        ],
+        "sugerencia_mejora": "Menciona la temporada de pescado específica para Galicia y proporciona más detalles sobre técnicas de pesca efectivas"
+      }
+    }
+  ]
+}

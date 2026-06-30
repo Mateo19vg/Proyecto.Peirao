@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
-import { createCaptura, getEspecies, getSpots } from '../services/api'
+import { createCaptura, createSpot, getEspecies, getSpots } from '../services/api'
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -141,7 +141,6 @@ export default function AddCaptura() {
     }
     if (!coords) { setError('Selecciona una ubicación.'); return }
 
-    // Validación extra de seguridad por código para el tiempo futuro
     if (form.fecha > hoyStr || (form.fecha === hoyStr && form.hora > horaActualStr)) {
       setError('No puedes registrar una captura en el futuro.')
       return
@@ -156,18 +155,12 @@ export default function AddCaptura() {
           ? `${ZONAS_GALICIA[parseInt(zonaIdx)].nombre} (zona)`
           : `Punto libre (${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)})`
 
-        const res = await fetch('/api/spots/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre: nombreSpot, tipo: 'mar',
-            latitud: coords.lat, longitud: coords.lon,
-            descripcion: modo === 'libre' ? 'Punto personalizado' : 'Zona general',
-            es_personalizado: true,
-          }),
+        const nuevoSpot = await createSpot({
+          nombre: nombreSpot, tipo: 'mar',
+          latitud: coords.lat, longitud: coords.lon,
+          descripcion: modo === 'libre' ? 'Punto personalizado' : 'Zona general',
+          es_personalizado: true,
         })
-        if (!res.ok) throw new Error('No se pudo crear el spot')
-        const nuevoSpot = await res.json()
         spotFinal = nuevoSpot.id
       }
 
@@ -290,7 +283,7 @@ export default function AddCaptura() {
           </Field>
         )}
 
-        {/* Fecha y hora con LIMITADORES MAX */}
+        {/* Fecha y hora con limitadores MAX */}
         <div className="grid grid-cols-2 gap-4">
           <Field label="Fecha *">
             <input 

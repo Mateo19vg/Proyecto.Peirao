@@ -1,0 +1,25 @@
+{
+  "especie": "lubina",
+  "nombre_comun": "Robalo",
+  "nombre_cientifico": "Dicentrarchus labrax",
+  "descripcion_breve": "Pez perciforme de la familia Moronidae, apreciado por su valor culinario y en la pesca deportiva.",
+  "habitat": "Costas rocosas de los arenales, desembocaduras de los ríos y puertos",
+  "distribucion_galicia": "Rías gallegas, especialmente en las costas de Vigo y Cangas do Morrazo",
+  "temporada_pesca": "Abril-junio y septiembre-noviembre",
+  "tecnicas_recomendadas": [
+    "Pulga",
+    "Cabo de seda"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "100 cm",
+  "record_talla": "1,4 m y 14 kg",
+  "curiosidades_pescador": "Su cabeza es de tamaño mediano, con una boca desproporcionadamente grande.",
+  "consejos_galicia": "En las rías gallegas, busca fondos rocosos y arenosos para encontrar a la lubina.",
+  "_fuente": "Wikipedia - Lubina europea",
+  "_url": "https://es.wikipedia.org/wiki/Dicentrarchus_labrax",
+  "_fecha_procesado": "2026-06-27T13:04:07.361993",
+  "_doc_id": "54370b0724"
+}

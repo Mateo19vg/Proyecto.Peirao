@@ -1,0 +1,25 @@
+{
+  "especie": "dorada",
+  "nombre_comun": "Dorada",
+  "nombre_cientifico": "Sparus aurata",
+  "descripcion_breve": "Pez costero con franja dorada característica, se encuentra en aguas profundas y se alimenta de peces, crustáceos y moluscos.",
+  "habitat": "30-150 m, zonas rocosas o superficies arenosas de los bajos fondos",
+  "distribucion_galicia": "Costas de Galicia, Rías Altas, Ría de Vigo",
+  "temporada_pesca": "Abril a noviembre",
+  "tecnicas_recomendadas": [
+    "Pulga",
+    "Cabo de seda"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "60 cm",
+  "record_talla": "1 m",
+  "curiosidades_pescador": "Es una especie hermafrodita protándrica, es decir, son machos al nacer hasta que alcanzan aproximadamente los dos años.",
+  "consejos_galicia": "En las rías gallegas, busca fondos rocosos y arenosos para encontrar a la dorada.",
+  "_fuente": "Wikipedia - Dorada",
+  "_url": "https://es.wikipedia.org/wiki/Sparus_aurata",
+  "_fecha_procesado": "2026-06-27T13:04:01.030529",
+  "_doc_id": "1387ae47f2"
+}

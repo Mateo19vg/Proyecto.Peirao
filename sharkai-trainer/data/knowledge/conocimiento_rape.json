@@ -1,0 +1,25 @@
+{
+  "especie": "rape",
+  "nombre_comun": "Rape común",
+  "nombre_cientifico": "Lophius piscatorius",
+  "descripcion_breve": "Pez lofiforme de gran tamaño, con una cabeza y cuerpo muy deprimidos, que vive en aguas profundas y se alimenta principalmente de peces.",
+  "habitat": "200-1000 metros, suelos arenosos y fangosos próximos a la costa",
+  "distribucion_galicia": "Rías gallegas, especialmente en las áreas con fondos rocosos y arenosos",
+  "temporada_pesca": "Abril-junio y septiembre-noviembre",
+  "tecnicas_recomendadas": [
+    "Pescado con cebo",
+    "Red con cebo"
+  ],
+  "cebos_efectivos": [
+    "Cepa de polvo",
+    "Cepa de harina"
+  ],
+  "talla_minima_legal": "Consultar normativa",
+  "record_talla": "200 cm",
+  "curiosidades_pescador": "El rape se convierte en un reservorio de esperma fertilizador de huevos después del apareamiento.",
+  "consejos_galicia": "En las rías gallegas, es importante buscar fondos rocosos y arenosos para encontrar a este pescado",
+  "_fuente": "Wikipedia - Rape",
+  "_url": "https://es.wikipedia.org/wiki/Lophius_piscatorius",
+  "_fecha_procesado": "2026-06-27T12:42:01.709392",
+  "_doc_id": "e4bb750471"
+}

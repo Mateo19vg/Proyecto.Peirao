@@ -1,0 +1,26 @@
+{
+  "especie": "merluza",
+  "nombre_comun": "pijota",
+  "nombre_cientifico": "Merluccius merluccius",
+  "descripcion_breve": "Pescado blanco y de agua salada, se alimenta de peces más pequeños y calamares. Es una especie comercializada y abundante en los mercados.",
+  "habitat": "200 m, temperaturas entre 5°C",
+  "distribucion_galicia": "Costas de Galicia, Rías Altas, Ría de Vigo",
+  "temporada_pesca": "Abril a noviembre",
+  "tecnicas_recomendadas": [
+    "palangre",
+    "redes de enmalle",
+    "arrastre"
+  ],
+  "cebos_efectivos": [
+    "pijota",
+    "anchoa"
+  ],
+  "talla_minima_legal": "Consultar normativa",
+  "record_talla": "150 cm",
+  "curiosidades_pescador": "La merluza es una especie muy comercializada y abundante en los mercados.",
+  "consejos_galicia": "En las rías gallegas, busca fondos rocosos y arenosos para encontrar a la merluza",
+  "_fuente": "Wikipedia - Merluza europea",
+  "_url": "https://es.wikipedia.org/wiki/Merluccius_merluccius",
+  "_fecha_procesado": "2026-06-27T12:41:44.636879",
+  "_doc_id": "d3242aacda"
+}

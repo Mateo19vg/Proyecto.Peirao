@@ -1,0 +1,25 @@
+{
+  "especie": "rodaballo",
+  "nombre_comun": "Rodaballo",
+  "nombre_cientifico": "Scophthalmus maximus",
+  "descripcion_breve": "Pez plano de ojo izquierdo, se encuentra cerca de la costa en aguas arenosas poco profundas.",
+  "habitat": "Fondos marinos de arena, fango o grava, desde aguas someras hasta los 100 m de profundidad",
+  "distribucion_galicia": "Costa atlántica de Galicia, especialmente en las rías y aguas arenosas poco profundas",
+  "temporada_pesca": "Abril a agosto",
+  "tecnicas_recomendadas": [
+    "Pulga",
+    "Cabo de seda"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "30 cm",
+  "record_talla": "1 metro (40 plg)",
+  "curiosidades_pescador": "Se alimenta fundamentalmente de otros peces bentónicos y más raramente de crustáceos y moluscos",
+  "consejos_galicia": "En las rías gallegas, busca fondos rocosos y arenosos para encontrar a este pescado",
+  "_fuente": "Wikipedia - Rodaballo",
+  "_url": "https://es.wikipedia.org/wiki/Scophthalmus_maximus",
+  "_fecha_procesado": "2026-06-27T12:42:07.957979",
+  "_doc_id": "4a1aa43df2"
+}

@@ -1,0 +1,25 @@
+{
+  "especie": "calamar",
+  "nombre_comun": "Calamar común",
+  "nombre_cientifico": "Loligo vulgaris",
+  "descripcion_breve": "Cefalópodo de la familia Loliginidae, semi-demerstal que se encuentra desde el Mar del Norte hasta la costa oeste de África.",
+  "habitat": "Mar del Norte hasta la costa oeste de África, desde el nivel del mar hasta 500 metros",
+  "distribucion_galicia": "Costas de Galicia, Rías Altas, Ría de Vigo",
+  "temporada_pesca": "Todo el año, con temporada en pequeña escala",
+  "tecnicas_recomendadas": [
+    "Pesca de arrastre",
+    "Pesca deportiva"
+  ],
+  "cebos_efectivos": [
+    "Cepa de anchoas",
+    "Cepa de arenque"
+  ],
+  "talla_minima_legal": "15-25 cm",
+  "record_talla": "30-40 cm",
+  "curiosidades_pescador": "El calamar europeo tiene diez miembros en torno a la boca y pico: ocho brazos relativamente cortos y dos tentáculos largos.",
+  "consejos_galicia": "En las rías gallegas, es importante utilizar técnicas de pesca deportiva adecuadas y cebos efectivos",
+  "_fuente": "Wikipedia - Calamar común",
+  "_url": "https://es.wikipedia.org/wiki/Loligo_vulgaris",
+  "_fecha_procesado": "2026-06-27T13:03:54.829278",
+  "_doc_id": "33aeb2e3a2"
+}

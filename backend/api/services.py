@@ -16,86 +16,75 @@ import math
 import requests
 from datetime import datetime, timezone
 
-# ---------------------------------------------------------------------------
-# URLs de Open-Meteo (sin API key)
-# ---------------------------------------------------------------------------
+# URLs de Open-Meteo 
+
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 MARINE_URL = "https://marine-api.open-meteo.com/v1/marine"
 
 
-# ---------------------------------------------------------------------------
-# 1. OBTENCIÓN DE DATOS METEOROLÓGICOS Y MARINOS
-# ---------------------------------------------------------------------------
+# OBTENCIÓN DE DATOS METEOROLÓGICOS Y MARINOS
 
-def get_weather(lat: float, lon: float) -> dict | None:
+def get_weather_range(lat: float, lon: float) -> dict | None:
     """
-    Obtiene condiciones actuales combinando datos atmosféricos + marinos.
-    Añade precipitación reciente (para estimar claridad del agua).
-    Devuelve None si falla alguna petición.
+    Obtiene las condiciones por horas para un rango de 15 días:
+    7 días al pasado, el día actual y 7 días al futuro.
     """
     params_weather = {
         "latitude": lat,
         "longitude": lon,
-        "current": ["temperature_2m", "wind_speed_10m", "weather_code", "precipitation"],
+        "hourly": ["temperature_2m", "wind_speed_10m", "weather_code", "precipitation"],
         "timezone": "Europe/Madrid",
-        "forecast_days": 1,
+        "past_days": 7,
+        "forecast_days": 8,  
     }
     params_marine = {
         "latitude": lat,
         "longitude": lon,
-        "current": ["sea_surface_temperature", "wave_height", "wave_period"],
+        "hourly": ["sea_surface_temperature", "wave_height", "wave_period"],
         "timezone": "Europe/Madrid",
+        "past_days": 7,
+        "forecast_days": 8,
     }
 
     try:
         r_w = requests.get(OPEN_METEO_URL, params=params_weather, timeout=5)
         r_w.raise_for_status()
-        wd = r_w.json()["current"]
+        wd_hourly = r_w.json()["hourly"]
 
         r_m = requests.get(MARINE_URL, params=params_marine, timeout=5)
         r_m.raise_for_status()
-        md = r_m.json()["current"]
+        md_hourly = r_m.json()["hourly"]
 
         return {
-            "temperatura_agua":  md.get("sea_surface_temperature"),
-            "altura_olas":       md.get("wave_height"),
-            "periodo_olas":      md.get("wave_period"),
-            "velocidad_viento":  wd.get("wind_speed_10m"),
-            "temperatura_aire":  wd.get("temperature_2m"),
-            "precipitacion":     wd.get("precipitation", 0),
-            "codigo_tiempo":     wd.get("weather_code"),
+            "timestamps":        wd_hourly.get("time", []),
+            "temperatura_aire":  wd_hourly.get("temperature_2m", []),
+            "velocidad_viento":  wd_hourly.get("wind_speed_10m", []),
+            "codigo_tiempo":     wd_hourly.get("weather_code", []),
+            "precipitacion":     wd_hourly.get("precipitation", []),
+            "temperatura_agua":  md_hourly.get("sea_surface_temperature", []),
+            "altura_olas":       md_hourly.get("wave_height", []),
+            "periodo_olas":      md_hourly.get("wave_period", []),
         }
 
     except requests.RequestException:
         return None
 
 
-# ---------------------------------------------------------------------------
-# 2. FASE LUNAR  (fórmula astronómica, sin API)
-# ---------------------------------------------------------------------------
+# FASE LUNAR
 
 def calcular_fase_lunar(dt: datetime = None) -> dict:
     """
     Calcula la fase lunar actual mediante fórmula astronómica simplificada.
-
-    Retorna:
-        fase_norm   — valor 0.0–1.0  (0 = luna nueva, 0.5 = llena)
-        nombre      — nombre de la fase en español
-        puntuacion  — 0–20 pts (máximo en luna nueva y llena)
-        emoji       — representación visual
     """
     if dt is None:
         dt = datetime.now(timezone.utc)
 
-    # Referencia: luna nueva conocida el 6 enero 2000 18:14 UTC
-    # Ciclo lunar sinódico = 29.53058867 días
     LUNA_NUEVA_REF = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
     CICLO = 29.53058867
 
     dias_desde_ref = (dt - LUNA_NUEVA_REF).total_seconds() / 86400
-    fase_norm = (dias_desde_ref % CICLO) / CICLO  # 0.0 a 1.0
+    fase_norm = (dias_desde_ref % CICLO) / CICLO
 
-    # Nombre de la fase
     if fase_norm < 0.063 or fase_norm >= 0.937:
         nombre = "Luna nueva"
     elif fase_norm < 0.188:
@@ -113,9 +102,7 @@ def calcular_fase_lunar(dt: datetime = None) -> dict:
     else:
         nombre = "Luna menguante"
 
-    # Puntuación: coseno doble → máximo en luna nueva (0) y llena (0.5)
-    # cos(2π * 2 * fase) da 1.0 en 0 y 0.5, y -1.0 en 0.25 y 0.75
-    puntuacion = round(10 + 10 * math.cos(2 * math.pi * 2 * fase_norm))  # 0–20
+    puntuacion = round(10 + 10 * math.cos(2 * math.pi * 2 * fase_norm))
 
     return {
         "fase_norm":   round(fase_norm, 3),
@@ -124,64 +111,39 @@ def calcular_fase_lunar(dt: datetime = None) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# 3. MAREAS  (modelo armónico simplificado, sin API)
-# ---------------------------------------------------------------------------
+# MAREAS  
 
 def calcular_mareas(lat: float, lon: float, dt: datetime = None) -> dict:
     """
     Estima el estado de la marea y puntúa el momento para pescar.
-
-    Modelo: combinación de las dos componentes principales del ciclo lunar
-    (M2 semidiurno + S2 solar), ajustadas por latitud y longitud para
-    introducir variabilidad geográfica realista en la costa gallega.
-
-    Los cambios de marea (pleamar → bajamar y viceversa) son los momentos
-    de mayor actividad de los peces, por eso reciben la máxima puntuación.
-
-    Retorna:
-        nivel_norm  — nivel relativo 0.0 (bajamar) a 1.0 (pleamar)
-        estado      — "Pleamar", "Bajamar", "Marea bajando", "Marea subiendo"
-        momento     — descripción del momento para pescar
-        puntuacion  — 0–20 pts
     """
     if dt is None:
         dt = datetime.now(timezone.utc)
 
-    # Segundos desde época J2000 (1 enero 2000 12:00 UTC)
     J2000 = datetime(2000, 1, 1, 12, 0, tzinfo=timezone.utc)
     t_dias = (dt - J2000).total_seconds() / 86400
 
-    # Componente M2: período 12.4206 h (principal lunar semidiurna)
-    # Componente S2: período 12.0000 h (principal solar semidiurna)
-    # La diferencia entre ambas genera el ciclo de mareas vivas/muertas (~15 días)
-    T_M2 = 12.4206 / 24  # en días
+    T_M2 = 12.4206 / 24
     T_S2 = 12.0000 / 24
 
-    # Desfase geográfico: cada punto de la costa tiene su propia fase
-    # Usamos lon y lat para crear un desfase único por ubicación
-    fase_geo = (lon * 0.13 + lat * 0.07) % 1.0  # 0–1
+    fase_geo = (lon * 0.13 + lat * 0.07) % 1.0
 
     angulo_M2 = 2 * math.pi * (t_dias / T_M2 + fase_geo)
     angulo_S2 = 2 * math.pi * (t_dias / T_S2 + fase_geo * 0.8)
 
-    # Amplitud M2 domina (1.0), S2 secundaria (0.35)
     nivel_raw = math.cos(angulo_M2) + 0.35 * math.cos(angulo_S2)
 
-    # Normalizar a 0–1
     max_posible = 1.35
     nivel_norm = round((nivel_raw + max_posible) / (2 * max_posible), 3)
 
-    # Calcular velocidad (derivada numérica, 15 min adelante)
     dt_future = datetime.fromtimestamp(dt.timestamp() + 900, tz=timezone.utc)
     t_fut = (dt_future - J2000).total_seconds() / 86400
     nivel_fut = math.cos(2 * math.pi * (t_fut / T_M2 + fase_geo)) + \
                 0.35 * math.cos(2 * math.pi * (t_fut / T_S2 + fase_geo * 0.8))
     nivel_fut_norm = (nivel_fut + max_posible) / (2 * max_posible)
 
-    velocidad = nivel_fut_norm - nivel_norm  # positivo = subiendo
+    velocidad = nivel_fut_norm - nivel_norm
 
-    # Clasificar estado
     if nivel_norm > 0.80:
         estado = "Pleamar"
     elif nivel_norm < 0.20:
@@ -191,19 +153,14 @@ def calcular_mareas(lat: float, lon: float, dt: datetime = None) -> dict:
     else:
         estado = "Marea bajando"
 
-    # Puntuación: el cambio de marea es el momento de oro (peces más activos)
-    # La zona de "cambio" es cuando la velocidad es alta (0.25–0.75 del nivel)
-    cambio_intensidad = abs(velocidad) * 40  # normalizado
+    cambio_intensidad = abs(velocidad) * 40
     if 0.25 < nivel_norm < 0.75:
-        # En zona de cambio activo
         puntuacion = round(min(20, 10 + cambio_intensidad * 20))
     elif nivel_norm > 0.80 or nivel_norm < 0.20:
-        # En pleamar o bajamar (aguas quietas, peor momento)
         puntuacion = round(max(5, 12 - abs(nivel_norm - 0.5) * 20))
     else:
         puntuacion = 13
 
-    # Descripción del momento para el pescador
     if estado == "Marea subiendo" and 0.3 < nivel_norm < 0.7:
         momento = "Momento ideal: marea subiendo activamente"
     elif estado == "Marea bajando" and 0.3 < nivel_norm < 0.7:
@@ -223,31 +180,24 @@ def calcular_mareas(lat: float, lon: float, dt: datetime = None) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# 4. TEMPERATURA DEL AGUA  (0–20 pts)
-# ---------------------------------------------------------------------------
+# TEMPERATURA DEL AGUA
 
 def puntuar_temperatura(temp_agua: float, especie) -> tuple[int, str | None]:
-    """
-    Máximo 20 pts. Penaliza fuera del rango óptimo de la especie.
-    Gradual: -2 pts por cada grado fuera del rango (no colapsa de golpe).
-    """
     if temp_agua is None:
-        return 10, None  # sin datos: neutro
+        return 10, None
 
     t_min = especie.temp_agua_min
     t_max = especie.temp_agua_max
     rango = t_max - t_min
 
     if t_min <= temp_agua <= t_max:
-        # Dentro del rango: máximo, con pequeño bonus si está en el centro
         centro = (t_min + t_max) / 2
         distancia_centro = abs(temp_agua - centro) / (rango / 2)
-        pts = round(20 - distancia_centro * 3)  # 17–20
+        pts = round(20 - distancia_centro * 3)
     elif temp_agua < t_min:
         diff = t_min - temp_agua
         pts = max(0, round(20 - diff * 3))
-    else:  # temp > t_max
+    else:
         diff = temp_agua - t_max
         pts = max(0, round(20 - diff * 3))
 
@@ -261,88 +211,68 @@ def puntuar_temperatura(temp_agua: float, especie) -> tuple[int, str | None]:
     return min(20, pts), nota
 
 
-# ---------------------------------------------------------------------------
-# 5. VIENTO  (0–15 pts)
-# ---------------------------------------------------------------------------
+# VIENTO
+
 
 def puntuar_viento(viento: float, especie) -> tuple[int, str | None]:
-    """
-    Máximo 15 pts. Algo de viento es neutral; viento excesivo penaliza.
-    Viento < 5 km/h (calma total): también penaliza ligeramente en mar
-    porque suele indicar aguas demasiado quietas.
-    """
     if viento is None:
         return 8, None
 
     v_max = especie.viento_max
 
     if viento < 5:
-        pts = 10  # calma: aceptable pero no ideal
+        pts = 10
         nota = None
     elif viento <= v_max * 0.6:
-        pts = 15  # viento suave: perfecto
+        pts = 15
         nota = None
     elif viento <= v_max:
-        # Viento aceptable pero acercándose al límite
         fraccion = (viento - v_max * 0.6) / (v_max * 0.4)
-        pts = round(15 - fraccion * 5)  # 10–15
+        pts = round(15 - fraccion * 5)
         nota = None
     else:
-        # Viento excesivo
         exceso = viento - v_max
         pts = max(0, round(10 - exceso * 1.5))
-        nota = f"Viento fuerte ({viento:.0f} km/h, máx recomendado {v_max:.0f})"
+        nota = f"Viento fuerte ({viento:.0f} km/h, máx {v_max:.0f})"
 
     return pts, nota
 
 
-# ---------------------------------------------------------------------------
-# 6. ESTADO DEL MAR  (0–15 pts)
-# ---------------------------------------------------------------------------
+# ESTADO DEL MAR
+
 
 def puntuar_olas(altura_olas: float, periodo: float = None) -> tuple[int, str | None]:
-    """
-    Máximo 15 pts. Olas de 0.3–1.0 m son ideales para la mayoría de técnicas.
-    Mar en calma total (<0.1 m) o muy agitado (>2.5 m) penaliza.
-    """
     if altura_olas is None:
         return 8, None
 
     if altura_olas < 0.1:
-        pts, nota = 10, None           # mar en calma: pescable pero poco movimiento
+        pts, nota = 10, None
     elif altura_olas <= 0.5:
-        pts, nota = 15, None           # ideal: mar suave
+        pts, nota = 15, None
     elif altura_olas <= 1.0:
-        pts, nota = 13, None           # mar rizado: bueno
+        pts, nota = 13, None
     elif altura_olas <= 1.5:
-        pts, nota = 10, None           # mar moderado: aceptable
+        pts, nota = 10, None
     elif altura_olas <= 2.0:
         pts, nota = 6, f"Mar agitado ({altura_olas:.1f} m)"
     elif altura_olas <= 2.5:
         pts, nota = 3, f"Mar muy agitado ({altura_olas:.1f} m)"
     else:
-        pts, nota = 0, f"Mar peligroso ({altura_olas:.1f} m), no recomendado"
+        pts, nota = 0, f"Mar peligroso ({altura_olas:.1f} m)"
 
     return pts, nota
 
 
-# ---------------------------------------------------------------------------
-# 7. CLARIDAD DEL AGUA  (0–10 pts, estimada)
-# ---------------------------------------------------------------------------
+
+# CLARIDAD DEL AGUA
+
 
 def puntuar_claridad(precipitacion: float, altura_olas: float) -> tuple[int, str | None]:
-    """
-    Máximo 10 pts. Estimación indirecta:
-    - Lluvia reciente → agua turbia (sedimentos en suspensión)
-    - Olas altas → agua removida, más turbia
-    No hay API de turbidez gratuita; esto es una aproximación razonable.
-    """
     precipitacion = precipitacion or 0
     altura_olas = altura_olas or 0
 
     pts = 10
 
-    # Penalizar por lluvia
     if precipitacion > 5:
         pts -= 6
     elif precipitacion > 2:
@@ -350,7 +280,6 @@ def puntuar_claridad(precipitacion: float, altura_olas: float) -> tuple[int, str
     elif precipitacion > 0.5:
         pts -= 2
 
-    # Penalizar por olas que remueven el fondo
     if altura_olas > 2.0:
         pts -= 4
     elif altura_olas > 1.0:
@@ -362,26 +291,16 @@ def puntuar_claridad(precipitacion: float, altura_olas: float) -> tuple[int, str
 
     nota = None
     if pts <= 4:
-        nota = "Agua probablemente turbia (lluvia o mar agitado)"
+        nota = "Agua probablemente turbia"
     elif pts <= 7:
         nota = "Claridad del agua moderada"
 
     return pts, nota
 
 
-# ---------------------------------------------------------------------------
-# 8. PUNTUACIÓN TOTAL
-# ---------------------------------------------------------------------------
+# PUNTUACIÓN TOTAL
 
-def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: float = -8.5) -> dict:
-    """
-    Combina los 6 factores y devuelve:
-        puntuacion   — 0–100
-        resumen      — texto corto para el usuario
-        desglose     — dict con puntos y notas de cada factor
-        luna         — datos de la fase lunar
-        mareas       — datos del estado de las mareas
-    """
+def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: float = -8.5, dt: datetime = None) -> dict:
     if not condiciones:
         return {
             "puntuacion": 0,
@@ -391,9 +310,8 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
             "mareas": {},
         }
 
-    ahora = datetime.now(timezone.utc)
+    ahora = dt if dt is not None else datetime.now(timezone.utc)
 
-    # -- Calcular factores independientes --
     luna   = calcular_fase_lunar(ahora)
     mareas = calcular_mareas(lat, lon, ahora)
 
@@ -402,13 +320,12 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
     olas_pts,     olas_nota     = puntuar_olas(condiciones.get("altura_olas"), condiciones.get("periodo_olas"))
     claridad_pts, claridad_nota = puntuar_claridad(condiciones.get("precipitacion", 0), condiciones.get("altura_olas", 0))
 
-    luna_pts   = luna["puntuacion"]    # 0–20
-    mareas_pts = mareas["puntuacion"]  # 0–20
+    luna_pts   = luna["puntuacion"]
+    mareas_pts = mareas["puntuacion"]
 
     total = temp_pts + viento_pts + olas_pts + claridad_pts + luna_pts + mareas_pts
     total = max(0, min(100, total))
 
-    # -- Resumen principal --
     if total >= 80:
         texto = "Condiciones excelentes para pescar"
     elif total >= 65:
@@ -420,38 +337,18 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
     else:
         texto = "Condiciones desfavorables"
 
-    # Añadir el problema más grave si lo hay
     problemas = [n for n in [temp_nota, viento_nota, olas_nota, claridad_nota] if n]
     resumen = texto
     if problemas:
         resumen += ": " + problemas[0]
 
-    # -- Desglose detallado --
     desglose = {
-        "temperatura_agua": {
-            "puntos": temp_pts, "max": 20,
-            "nota": temp_nota or f"{condiciones.get('temperatura_agua', '—'):.1f}°C" if condiciones.get('temperatura_agua') else "Sin datos",
-        },
-        "viento": {
-            "puntos": viento_pts, "max": 15,
-            "nota": viento_nota or f"{condiciones.get('velocidad_viento', 0):.0f} km/h",
-        },
-        "estado_mar": {
-            "puntos": olas_pts, "max": 15,
-            "nota": olas_nota or f"Olas {condiciones.get('altura_olas', 0):.1f} m",
-        },
-        "claridad_agua": {
-            "puntos": claridad_pts, "max": 10,
-            "nota": claridad_nota or "Agua clara",
-        },
-        "luna": {
-            "puntos": luna_pts, "max": 20,
-            "nota": luna['nombre'],
-        },
-        "mareas": {
-            "puntos": mareas_pts, "max": 20,
-            "nota": mareas["momento"],
-        },
+        "temperatura_agua": {"puntos": temp_pts, "max": 20, "nota": temp_nota or f"{condiciones.get('temperatura_agua', '—'):.1f}°C" if condiciones.get('temperatura_agua') else "Sin datos"},
+        "viento": {"puntos": viento_pts, "max": 15, "nota": viento_nota or f"{condiciones.get('velocidad_viento', 0):.0f} km/h"},
+        "estado_mar": {"puntos": olas_pts, "max": 15, "nota": olas_nota or f"Olas {condiciones.get('altura_olas', 0):.1f} m"},
+        "claridad_agua": {"puntos": claridad_pts, "max": 10, "nota": claridad_nota or "Agua clara"},
+        "luna": {"puntos": luna_pts, "max": 20, "nota": luna['nombre']},
+        "mareas": {"puntos": mareas_pts, "max": 20, "nota": mareas["momento"]},
     }
 
     return {
@@ -463,16 +360,57 @@ def calcular_puntuacion(condiciones: dict, especie, lat: float = 43.0, lon: floa
     }
 
 
-# ---------------------------------------------------------------------------
-# 9. UTILIDADES
-# ---------------------------------------------------------------------------
+def calcular_puntuacion_rango(datos_viento_mar: dict, especie, lat: float, lon: float) -> list:
+    """
+    Recibe los arrays de Open-Meteo y genera el timeline completo llamando
+    a calcular_puntuacion() para cada una de las horas.
+    """
+    if not datos_viento_mar or "timestamps" not in datos_viento_mar:
+        return []
+
+    resultados_timeline = []
+    total_horas = len(datos_viento_mar["timestamps"])
+
+    for i in range(total_horas):
+        timestamp_str = datos_viento_mar["timestamps"][i]
+        dt_hora = datetime.fromisoformat(timestamp_str).replace(tzinfo=timezone.utc)
+
+        condiciones_hora = {
+            "temperatura_agua": datos_viento_mar["temperatura_agua"][i] if i < len(datos_viento_mar["temperatura_agua"]) else None,
+            "altura_olas":      datos_viento_mar["altura_olas"][i] if i < len(datos_viento_mar["altura_olas"]) else None,
+            "periodo_olas":     datos_viento_mar["periodo_olas"][i] if i < len(datos_viento_mar["periodo_olas"]) else None,
+            "velocidad_viento": datos_viento_mar["velocidad_viento"][i] if i < len(datos_viento_mar["velocidad_viento"]) else None,
+            "temperatura_aire": datos_viento_mar["temperatura_aire"][i] if i < len(datos_viento_mar["temperatura_aire"]) else None,
+            "precipitacion":    datos_viento_mar["precipitacion"][i] if i < len(datos_viento_mar["precipitacion"]) else 0,
+            "codigo_tiempo":    datos_viento_mar["codigo_tiempo"][i] if i < len(datos_viento_mar["codigo_tiempo"]) else 0,
+        }
+
+        analisis_hora = calcular_puntuacion(condiciones_hora, especie, lat, lon, dt=dt_hora)
+
+        # para que React pueda leer las variables físicas de forma directa.
+        resultados_timeline.append({
+            "fecha_hora":     timestamp_str,
+            "puntuacion":     analisis_hora["puntuacion"],
+            "resumen":        analisis_hora["resumen"],
+            "desglose":       analisis_hora["desglose"],
+            "luna":           analisis_hora["luna"],
+            "mareas":         analisis_hora["mareas"],
+            "estado_tiempo":  describir_tiempo(condiciones_hora["codigo_tiempo"]),
+            "condiciones":    condiciones_hora  # <-- ¡Sincronizado con React!
+        })
+
+    return resultados_timeline
+
+
+
+# UTILIDADES
+
 
 WMO_CODES = {
     0: "Despejado", 1: "Mayormente despejado", 2: "Parcialmente nublado",
     3: "Nublado", 45: "Niebla", 51: "Llovizna ligera", 61: "Lluvia ligera",
     71: "Nieve ligera", 80: "Chubascos", 95: "Tormenta",
 }
-
 
 def describir_tiempo(codigo: int) -> str:
     return WMO_CODES.get(codigo, f"Código {codigo}")
